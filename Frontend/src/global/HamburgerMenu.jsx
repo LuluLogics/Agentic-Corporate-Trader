@@ -402,7 +402,7 @@ const HamburgerMenu = () => {
                     fontWeight="bold"
                     sx={{ m: "10px 0 0 0" }}
                   >
-                    {user?.firstName + " " + user?.lastName || "User"}
+                    {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : "User"}
                   </Typography>
                   <Typography variant="h5" color={colors.greenAccent[100]}>
                     Elite Investor
