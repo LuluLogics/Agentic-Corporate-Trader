@@ -1,50 +1,7 @@
-// import { useState } from 'react';
-// import { useAuthContext } from './useAuthContext.jsx';
-
-// export const useSignup = () =>{
-//     const [error, setError] = useState(null);
-//     const [isLoading, setIsLoading] = useState(null);
-//     const { dispatch } = useAuthContext();
-
-//     const signup = async (firstName, lastName, email, password) =>{
-//         setIsLoading(true)
-//         setError(null)
-        
-
-//         const url = "http://localhost:8080/user/signup/";
-//         const response = await fetch (url, {
-//             method: 'POST',
-//             headers:{'Content-Type':'application/json'},
-//             body: JSON.stringify({firstName, lastName, email, password})
-//         })
-//         const json = await response.json()
-
-//         if(!response.ok){
-//             setIsLoading(false)
-//             setError(json.error)
-//             return false;
-//         }
-//         if(response.ok){
-//             // save the user to local browser storage
-//             localStorage.setItem('user',JSON.stringify(json))
-
-//             // Update the auth context
-//             dispatch({type:'LOGIN', payload: json});
-//             setIsLoading(false);
-//             return true;
-//         }
-//     }
-//     return ({ signup,  error, isLoading });
-// };
-
-
-
-// FIREBASE SETUP 
 import { useState } from 'react';
 import { useAuthContext } from './useAuthContext.jsx';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth, db } from '../firebaseConfig'; // Import Firestore
-import { doc, setDoc } from 'firebase/firestore'; // Firestore functions
+import { auth } from '../firebaseConfig'; // Firebase Auth
 
 export const useSignup = () => {
     const [error, setError] = useState(null);
@@ -56,28 +13,37 @@ export const useSignup = () => {
         setError(null);
 
         try {
-            // Register the user with email and password
+            // Register the user with Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
             // Update the user's display name in Firebase
             await updateProfile(user, {
-                displayName: `${firstName} ${lastName}`
+                displayName: `${firstName} ${lastName}`,
             });
 
-            // Save user details to Firestore
-            await setDoc(doc(db, 'users', user.uid), {
-                firstName,
-                lastName,
-                email,
-                createdAt: new Date().toISOString(),
+            // Call the API to save user details in Firestore
+            const response = await fetch('/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    firstName,
+                    lastName,
+                    role: "manager", 
+                }),
             });
+
+            if (!response.ok) {
+                throw new Error("Failed to save user data in Firestore");
+            }
 
             // Save user details in local storage
             localStorage.setItem('user', JSON.stringify({
                 uid: user.uid,
                 email: user.email,
-                displayName: user.displayName
+                displayName: user.displayName,
             }));
 
             // Update auth context
