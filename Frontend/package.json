@@ -23,10 +23,10 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
-    "react-tradingview-widget": "^1.3.2",
     "react-ts-tradingview-widgets": "^1.0.12",
     "recharts": "^2.1.16",
     "sass": "^1.56.1",
+    "stocks-trader": "file:",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
