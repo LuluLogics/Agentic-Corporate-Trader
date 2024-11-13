@@ -57,6 +57,7 @@ function App() {
               />
               {/* <Route path="/dashboard" element = {<Dashboard />} /> */}
               <Route path="/register" element={<><Register/><Copyright /></>} />
+              <Route path="/login" element={<><Login/><Copyright /></>} />
               <Route
                 path="/watchlist"
                 element={
