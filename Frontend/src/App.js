@@ -22,6 +22,7 @@ import Portfolio from "./scenes/dashboard/Portfolio";
 import Orders from "./scenes/dashboard/tradeHistory.js";
 import Testimonials from "./global/Testimonials.jsx";
 
+
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -208,12 +209,12 @@ function App() {
 
 
 
-              {/* <Route path="/details" element={<Details />} /> */}
+              {/* <Route path="/details" element={<Details />} /> 
               
               <Route path="/login" element={<><Login /> <Copyright /></>} />
-              {/* <Route path="/news" element={<Newz />} /> */}
+              <Route path="/news" element={<News />} /> 
 
-              {/* <Route path="/watchlist" element = {<Watchlist />} /> */}
+              <Route path="/watchlist" element = {<Watchlist />} />  */}
             </Routes>
           </main>
         </div>

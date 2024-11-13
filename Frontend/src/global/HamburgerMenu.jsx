@@ -309,6 +309,7 @@ import { useAuthContext } from "../contexts/AuthContext"; // Import the context
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   return (
     <MenuItem
       active={selected === title}
@@ -318,8 +319,17 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
       onClick={() => setSelected(title)}
       icon={icon}
     >
-      <Typography>{title}</Typography>
-      <Link to={to} />
+      <Link
+        to={to}
+        style={{
+          textDecoration: "none",
+          color: colors.grey[100],
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Typography>{title}</Typography>
+      </Link>
     </MenuItem>
   );
 };
@@ -331,7 +341,7 @@ const HamburgerMenu = () => {
   const [selected, setSelected] = useState("Dashboard");
   const { collapseSidebar } = useProSidebar();
   const storedData = JSON.parse(localStorage.getItem("user") || "{}");
-  
+
   return (
     <Box
       sx={{
@@ -383,7 +393,6 @@ const HamburgerMenu = () => {
               )}
             </MenuItem>
 
-            {/* USER */}
             {!isCollapsed && (
               <Box mb="25px">
                 <Box display="flex" justifyContent="center" alignItems="center">
@@ -402,7 +411,9 @@ const HamburgerMenu = () => {
                     fontWeight="bold"
                     sx={{ m: "10px 0 0 0" }}
                   >
-                    {storedData?.firstName && storedData?.lastName ? `${storedData.firstName} ${storedData.lastName}` : "User"}
+                    {storedData?.firstName && storedData?.lastName
+                      ? `${storedData.firstName} ${storedData.lastName}`
+                      : "User"}
                   </Typography>
                   <Typography variant="h5" color={colors.greenAccent[100]}>
                     Elite Investor
@@ -411,94 +422,62 @@ const HamburgerMenu = () => {
               </Box>
             )}
 
-            {/* MENU ITEMS */}
             <Box paddingLeft={isCollapsed ? undefined : "1%"}>
-              <MenuItem
+              <Item
                 title="Dashboard"
-                routerLink={<Link to="/home"></Link>}
-                icon={<HomeOutlinedIcon style={{ color: colors.grey[100] }} />}
+                to="/home"
+                icon={<HomeOutlinedIcon />}
                 selected={selected}
-                color={colors.grey[100]}
                 setSelected={setSelected}
-              >
-                <Typography color={colors.grey[100]}>Stock Listings</Typography>
-              </MenuItem>
-
-              <Typography
-                variant="h6"
-                color={colors.grey[100]}
-                sx={{ m: "15px 0 5px 20px" }}
-              >
+              />
+              <Typography variant="h6" color={colors.grey[100]} sx={{ m: "15px 0 5px 20px" }}>
                 Data
               </Typography>
-
-              <MenuItem
+              <Item
                 title="Watchlist"
-                routerLink={<Link to="/watchlist"></Link>}
-                icon={<AccountBalanceSharpIcon style={{ color: colors.grey[100] }} />}
+                to="/watchlist"
+                icon={<AccountBalanceSharpIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              >
-                <Typography color={colors.grey[100]}>Watchlist</Typography>
-              </MenuItem>
-
-              <MenuItem
+              />
+              <Item
                 title="Portfolio"
-                routerLink={<Link to="/portfolio"></Link>}
-                icon={<ContactsOutlinedIcon style={{ color: colors.grey[100] }} />}
+                to="/portfolio"
+                icon={<ContactsOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              >
-                <Typography color={colors.grey[100]}>Portfolio</Typography>
-              </MenuItem>
-
-              <MenuItem
+              />
+              <Item
                 title="Orders"
-                routerLink={<Link to="/orders"></Link>}
-                icon={<ReceiptLongOutlinedIcon style={{ color: colors.grey[100] }} />}
+                to="/orders"
+                icon={<ReceiptLongOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              >
-                <Typography color={colors.grey[100]}>Orders</Typography>
-              </MenuItem>
-
-              <Typography
-                variant="h6"
-                color={colors.grey[100]}
-                sx={{ m: "15px 0 5px 20px" }}
-              >
+              />
+              <Typography variant="h6" color={colors.grey[100]} sx={{ m: "15px 0 5px 20px" }}>
                 Pages
               </Typography>
-
-              <MenuItem
+              <Item
                 title="News"
-                routerLink={<Link to="/news"></Link>}
-                icon={<NewspaperOutlinedIcon style={{ color: colors.grey[100] }} />}
+                to="/news"
+                icon={<NewspaperOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              >
-                <Typography color={colors.grey[100]}>News</Typography>
-              </MenuItem>
-
-              <MenuItem
+              />
+              <Item
                 title="IPO"
-                routerLink={<Link to="/ipo"></Link>}
-                icon={<CandlestickChartOutlinedIcon style={{ color: colors.grey[100] }} />}
+                to="/ipo"
+                icon={<CandlestickChartOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              >
-                <Typography color={colors.grey[100]}>IPO</Typography>
-              </MenuItem>
-
-              <MenuItem
+              />
+              <Item
                 title="Reviews"
-                routerLink={<Link to="/testimonials"></Link>}
-                icon={<RateReviewOutlinedIcon style={{ color: colors.grey[100] }} />}
+                to="/testimonials"
+                icon={<RateReviewOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              >
-                <Typography color={colors.grey[100]}>Reviews</Typography>
-              </MenuItem>
+              />
             </Box>
           </Menu>
         </Box>
