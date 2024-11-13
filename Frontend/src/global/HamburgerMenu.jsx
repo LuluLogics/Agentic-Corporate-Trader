@@ -330,7 +330,7 @@ const HamburgerMenu = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const { collapseSidebar } = useProSidebar();
-  const { user } = useAuthContext(); // Fetching user data from context
+  const storedData = JSON.parse(localStorage.getItem("user"));
   
   return (
     <Box
@@ -402,7 +402,7 @@ const HamburgerMenu = () => {
                     fontWeight="bold"
                     sx={{ m: "10px 0 0 0" }}
                   >
-                    {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : "User"}
+                    {storedData?.firstName && storedData?.lastName ? `${storedData.firstName} ${storedData.lastName}` : "User"}
                   </Typography>
                   <Typography variant="h5" color={colors.greenAccent[100]}>
                     Elite Investor
