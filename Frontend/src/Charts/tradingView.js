@@ -1,30 +1,38 @@
 import React from "react";
-import TradingViewWidget, { Themes } from "react-tradingview-widget";
-/* import TechnicalAnalysis, {
-  THEMES,
-  INTERVALS
-} from "react-tradingview-technical-analysis"; */
 import {
-  MarketOverview,
+  AdvancedRealTimeChart,
   TechnicalAnalysis,
+  MarketOverview,
 } from "react-ts-tradingview-widgets";
 
 export default function TradingWidget(props) {
-  const symbol = "NASDAQ:".concat(props.symbol);
+  const symbol = `NASDAQ:${props.symbol}`;
+
   return (
     <div className="App">
       <div style={{ height: 500 }}>
-        <TradingViewWidget
+        <AdvancedRealTimeChart
           symbol={symbol}
-          theme={Themes.DARK}
+          theme="dark"
           locale="en"
           autosize
         />
       </div>
 
-      {/* <TechnicalAnalysis symbol={symbol} dark locale="en" />
+      {/* Uncomment these components as needed */}
+      {/* 
+      <TechnicalAnalysis
+        symbol={symbol}
+        theme="dark"
+        locale="en"
+      />
 
-      <MarketOverview locale="en" /> */}
+      <MarketOverview
+        locale="en"
+        theme="dark"
+      />
+      */}
     </div>
   );
 }
+
