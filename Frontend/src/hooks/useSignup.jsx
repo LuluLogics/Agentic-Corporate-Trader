@@ -17,37 +17,32 @@ export const useSignup = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Update the user's display name in Firebase
+            // Update Firebase profile for display name
             await updateProfile(user, {
                 displayName: `${firstName} ${lastName}`,
             });
 
-            // Call the API to save user details in Firestore
-            const response = await fetch('/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            // Save user details to the backend API
+            const response = await fetch("https://your-api-url/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     uid: user.uid,
                     email: user.email,
                     firstName,
                     lastName,
-                    role: "manager", 
+                    role: "user", // Optional: Define roles here
                 }),
             });
 
             if (!response.ok) {
-                throw new Error("Failed to save user data in Firestore");
+                const data = await response.json();
+                throw new Error(data.error || "Failed to save user data in Firestore");
             }
 
-            // Save user details in local storage
-            localStorage.setItem('user', JSON.stringify({
-                uid: user.uid,
-                email: user.email,
-                displayName: user.displayName,
-            }));
+            // Update AuthContext
+            dispatch({ type: "LOGIN", payload: user });
 
-            // Update auth context
-            dispatch({ type: 'LOGIN', payload: user });
             setIsLoading(false);
             return true;
         } catch (err) {
