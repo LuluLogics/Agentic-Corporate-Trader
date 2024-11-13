@@ -27,7 +27,7 @@ export const useLogin = () => {
             }
 
             const data = await response.json();
-            localStorage.setItem("user", JSON.stringify(data));
+            localStorage.setItem("user", JSON.stringify(data.user));
             setIsLoading(false);
             return true;
         } catch (err) {
