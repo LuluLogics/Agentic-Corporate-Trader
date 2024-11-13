@@ -31,7 +31,7 @@ export const useSignup = () => {
                     email: user.email,
                     firstName,
                     lastName,
-                    role: "user", // Optional: Define roles here
+                    role: "manager", // Optional: Define roles here
                 }),
             });
 
