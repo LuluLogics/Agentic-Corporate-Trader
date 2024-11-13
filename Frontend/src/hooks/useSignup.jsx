@@ -23,7 +23,7 @@ export const useSignup = () => {
             });
 
             // Save user details to the backend API
-            const response = await fetch("https://your-api-url/register", {
+            const response = await fetch("https://act-production-5e24.up.railway.app/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
