@@ -330,7 +330,7 @@ const HamburgerMenu = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const { collapseSidebar } = useProSidebar();
-  const storedData = JSON.parse(localStorage.getItem("user"));
+  const storedData = JSON.parse(localStorage.getItem("user") || "{}");
   
   return (
     <Box
