@@ -43,7 +43,8 @@
 import { useState } from 'react';
 import { useAuthContext } from './useAuthContext.jsx';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../firebaseConfig'; // Import the Firebase Auth instance
+import { auth, db } from '../firebaseConfig'; // Import Firestore
+import { doc, setDoc } from 'firebase/firestore'; // Firestore functions
 
 export const useSignup = () => {
     const [error, setError] = useState(null);
@@ -64,8 +65,20 @@ export const useSignup = () => {
                 displayName: `${firstName} ${lastName}`
             });
 
+            // Save user details to Firestore
+            await setDoc(doc(db, 'users', user.uid), {
+                firstName,
+                lastName,
+                email,
+                createdAt: new Date().toISOString(),
+            });
+
             // Save user details in local storage
-            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName
+            }));
 
             // Update auth context
             dispatch({ type: 'LOGIN', payload: user });
