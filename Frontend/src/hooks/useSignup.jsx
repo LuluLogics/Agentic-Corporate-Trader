@@ -43,6 +43,8 @@ export const useSignup = () => {
             // Update AuthContext
             dispatch({ type: "LOGIN", payload: user });
 
+            localStorage.setItem("user", JSON.stringify(user));
+
             setIsLoading(false);
             return true;
         } catch (err) {
