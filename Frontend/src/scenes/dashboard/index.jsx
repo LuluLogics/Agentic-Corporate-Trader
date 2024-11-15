@@ -369,7 +369,16 @@ const Dashboard = () => {
               .forEach((c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
       
           const stockTicker = thisRow.symbol; // Adjust as needed
-          const userId = storedData.userId; // Assumes `user` is logged-in user's data
+      
+          // Retrieve and validate the user ID from localStorage
+          const storedData = JSON.parse(localStorage.getItem("user") || "{}");
+          const userId = storedData?.id; // Correctly access the user ID using "id"
+      
+          if (!userId) {
+              console.error("User ID is missing or undefined.");
+              alert("User ID is missing. Please log in again.");
+              return;
+          }
       
           try {
               const response = await axios.post('https://act-production-5e24.up.railway.app/api/watchlist/add', {
@@ -384,6 +393,7 @@ const Dashboard = () => {
               console.error("Error adding stock to watchlist:", error.response?.data || error.message);
           }
       };
+      
 
         return <AddCircleOutlineIcon onClick={OnAdd}></AddCircleOutlineIcon>;
       },
