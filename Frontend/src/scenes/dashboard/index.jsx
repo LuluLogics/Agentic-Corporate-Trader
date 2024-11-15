@@ -372,7 +372,7 @@ const Dashboard = () => {
           try {
             // Call backend API to add stock to the watchlist
             const response = await axios.post(
-              "https://act-production-5e24.up.railway.app/watchlist/add",
+              "https://act-production-5e24.up.railway.app/api/watchlist/add",
               {
                 userId: user.id, // Pass the logged-in user's ID
                 stockTicker: thisRow.symbol, // Pass the stock's symbol

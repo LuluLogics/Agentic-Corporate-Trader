@@ -547,7 +547,7 @@ const Watchlist = () => {
   const colors = tokens(theme.palette.mode);
 
   // API URL for your backend
-  const API_BASE_URL = "https://act-production-5e24.up.railway.app"; // Replace with your backend's base URL
+  const API_BASE_URL = "https://act-production-5e24.up.railway.app/api"; // Replace with your backend's base URL
 
   const fetchData = async () => {
     if (!userId) {
