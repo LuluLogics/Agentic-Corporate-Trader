@@ -529,9 +529,10 @@
 import { Box, Typography, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { useTheme } from "@mui/material"; 
+import { useTheme } from "@mui/material";
 import Header from "../../components/Headers";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -564,7 +565,16 @@ const Watchlist = () => {
       const transformedData = response.data.map((stock, index) => ({
         id: index, // Unique ID for DataGrid
         ticker: stock.ticker,
+        name: stock.ticker, // Assuming stock name is same as ticker for simplicity
+        symbol: stock.ticker,
+        today: "N/A", // Placeholder for stock details
+        Percent: "N/A", // Placeholder for stock details
+        open: "N/A", // Placeholder for stock details
+        high: "N/A", // Placeholder for stock details
+        low: "N/A", // Placeholder for stock details
+        close: "N/A", // Placeholder for stock details
       }));
+
       setRows(transformedData);
     } catch (error) {
       console.error("Error fetching watchlist:", error.response?.data || error.message);
@@ -588,21 +598,66 @@ const Watchlist = () => {
     }
   };
 
-  // Fetch watchlist on component mount
   useEffect(() => {
     fetchWatchlist();
   }, []);
 
   const columns = [
-    { field: "ticker", headerName: "Stock Ticker", flex: 1 },
+    { field: "name", headerName: "Company Name", flex: 1 },
+    { field: "symbol", headerName: "Symbol", flex: 0.5 },
+    { field: "today", headerName: "Current Price", flex: 0.5, type: "number" },
+    { field: "Percent", headerName: "Percent Change", flex: 0.5, type: "number" },
+    { field: "open", headerName: "Open", flex: 0.3, type: "number" },
+    { field: "high", headerName: "High", flex: 0.3, type: "number" },
+    { field: "low", headerName: "Low", flex: 0.3, type: "number" },
+    { field: "close", headerName: "Close", flex: 0.3, type: "number" },
+    {
+      field: "Buy",
+      headerName: "Buy",
+      sortable: false,
+      renderCell: (params) => (
+        <Button
+          onClick={() => history("/buyStock", { state: params.row })}
+          variant="contained"
+          color="success"
+        >
+          Buy
+        </Button>
+      ),
+    },
+    {
+      field: "Sell",
+      headerName: "Sell",
+      sortable: false,
+      renderCell: (params) => (
+        <Button
+          onClick={() => history("/sellStock", { state: params.row })}
+          variant="outlined"
+          color="error"
+        >
+          Sell
+        </Button>
+      ),
+    },
     {
       field: "Delete",
-      headerName: "Remove",
+      headerName: "Delete",
       sortable: false,
       renderCell: (params) => (
         <DeleteIcon
-          onClick={() => deleteWatchlistItem(params.row.ticker)}
+          onClick={() => deleteWatchlistItem(params.row.symbol)}
           style={{ cursor: "pointer", color: "red" }}
+        />
+      ),
+    },
+    {
+      field: "Details",
+      headerName: "Details",
+      sortable: false,
+      renderCell: (params) => (
+        <AddCircleOutlineIcon
+          onClick={() => history("/details", { state: params.row })}
+          style={{ cursor: "pointer" }}
         />
       ),
     },
@@ -635,3 +690,4 @@ const Watchlist = () => {
 };
 
 export default Watchlist;
+
