@@ -303,10 +303,12 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { rows } from "../../finalStockData";
 
 const Dashboard = () => {
-  const { user } = useAuthContext();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const history = useNavigate();
+
+  const storedData = JSON.parse(localStorage.getItem("user") || "{}");
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -367,7 +369,7 @@ const Dashboard = () => {
               .forEach((c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
       
           const stockTicker = thisRow.symbol; // Adjust as needed
-          const userId = user.uid; // Assumes `user` is logged-in user's data
+          const userId = storedData.userId; // Assumes `user` is logged-in user's data
       
           try {
               const response = await axios.post('https://act-production-5e24.up.railway.app/api/watchlist/add', {
