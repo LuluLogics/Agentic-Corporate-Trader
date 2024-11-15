@@ -356,39 +356,32 @@ const Dashboard = () => {
       sortable: false,
       renderCell: (params) => {
         const OnAdd = async (e) => {
-          e.stopPropagation(); // Prevent row selection on click
-
+          e.stopPropagation(); // Prevent row selection when clicking button
+      
           const api = params.api;
           const thisRow = {};
-
-          // Gather row data
+      
           api
-            .getAllColumns()
-            .filter((c) => c.field !== "__check__" && !!c)
-            .forEach(
-              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-            );
-
+              .getAllColumns()
+              .filter((c) => c.field !== "__check__" && !!c)
+              .forEach((c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
+      
+          const stockTicker = thisRow.symbol; // Adjust as needed
+          const userId = user.uid; // Assumes `user` is logged-in user's data
+      
           try {
-            // Call backend API to add stock to the watchlist
-            const response = await axios.post(
-              "https://act-production-5e24.up.railway.app/api/watchlist/add",
-              {
-                userId: user.id, // Pass the logged-in user's ID
-                stockTicker: thisRow.symbol, // Pass the stock's symbol
-              }
-            );
-
-            console.log(`${thisRow.symbol} added to watchlist.`);
-            alert(`${thisRow.symbol} has been added to your watchlist.`);
-
-            // Optional: Redirect to watchlist page after adding
-            // history("/watchlist");
+              const response = await axios.post('https://act-production-5e24.up.railway.app/api/watchlist/add', {
+                  userId,
+                  stockTicker,
+              });
+              console.log("Stock added:", response.data);
+      
+              // Optionally show confirmation (e.g., using a toast or alert)
+              alert(`Added ${stockTicker} to watchlist.`);
           } catch (error) {
-            console.error("Error adding to watchlist:", error);
-            alert("Failed to add stock to watchlist.");
+              console.error("Error adding stock to watchlist:", error.response?.data || error.message);
           }
-        };
+      };
 
         return <AddCircleOutlineIcon onClick={OnAdd}></AddCircleOutlineIcon>;
       },
