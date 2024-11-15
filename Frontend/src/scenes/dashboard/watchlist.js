@@ -526,141 +526,83 @@
 
 // export default Watchlist;
 
-import { Box, Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { useTheme } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useTheme } from "@mui/material"; 
 import Header from "../../components/Headers";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Watchlist = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user && user.uid; // Assuming `uid` is used for user identification
-  const [rows, setRows] = useState([]);
+  const storedData = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = storedData?.id; // Retrieve the user ID from localStorage
+
+  const [rows, setRows] = useState([]); // Watchlisted stocks
   const [isLoading, setIsLoading] = useState(true);
   const history = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  // API URL for your backend
-  const API_BASE_URL = "https://act-production-5e24.up.railway.app/api"; // Replace with your backend's base URL
-
-  const fetchData = async () => {
+  // Fetch watchlisted stocks for the current user
+  const fetchWatchlist = async () => {
     if (!userId) {
-      console.error("User ID is undefined");
+      console.error("User ID is missing or undefined.");
+      alert("User ID is missing. Please log in again.");
       return;
     }
 
     try {
-      setIsLoading(true);
-
-      // Call your backend API to fetch the watchlist for the current user
-      const response = await axios.get(`${API_BASE_URL}/watchlist/${userId}`);
-
-      // Assuming the API response contains watchlist items with stock symbols
-      const watchlistData = await Promise.all(
-        response.data.map(async (item) => {
-          // Fetch live stock data using the stock symbol
-          const stockUrl = `https://finnhub.io/api/v1/quote?symbol=${item.symbol}&token=ce80b8aad3i4pjr4v2ggce80b8aad3i4pjr4v2h0`; // Replace with your Finnhub API key
-          const stockResponse = await axios.get(stockUrl);
-          const stockData = stockResponse.data;
-
-          return {
-            id: item.id, // Assuming `id` is returned by the backend
-            name: item.name,
-            symbol: item.symbol,
-            today: stockData.c,
-            Percent: stockData.dp + " %",
-            open: stockData.o,
-            high: stockData.h,
-            low: stockData.l,
-            close: stockData.pc,
-          };
-        })
+      const response = await axios.get(
+        `https://act-production-5e24.up.railway.app/api/watchlist/${userId}`
       );
+      console.log("Fetched watchlist:", response.data);
 
-      setRows(watchlistData);
+      // Transform the data for the DataGrid
+      const transformedData = response.data.map((stock, index) => ({
+        id: index, // Unique ID for DataGrid
+        ticker: stock.ticker,
+      }));
+      setRows(transformedData);
     } catch (error) {
-      console.error("Error fetching watchlist data:", error);
+      console.error("Error fetching watchlist:", error.response?.data || error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // Function to delete an item via the backend API
-  const deleteRow = async (id) => {
+  // Delete a stock from the user's watchlist
+  const deleteWatchlistItem = async (stockTicker) => {
     try {
-      await axios.delete(`${API_BASE_URL}/watchlist/${userId}/${id}`);
-      setRows(rows.filter((row) => row.id !== id));
+      await axios.delete("https://act-production-5e24.up.railway.app/api/watchlist/remove", {
+        data: { userId, stockTicker },
+      });
+      console.log(`Removed ${stockTicker} from watchlist.`);
+
+      // Update the rows state
+      setRows((prevRows) => prevRows.filter((row) => row.ticker !== stockTicker));
     } catch (error) {
-      console.error("Error deleting item:", error);
+      console.error("Error removing stock from watchlist:", error.response?.data || error.message);
     }
   };
 
+  // Fetch watchlist on component mount
+  useEffect(() => {
+    fetchWatchlist();
+  }, []);
+
   const columns = [
-    { field: "name", headerName: "Company Name", flex: 1 },
-    { field: "symbol", headerName: "Symbol", flex: 0.5 },
-    { field: "today", headerName: "Current Price", flex: 0.5, type: "number" },
-    { field: "Percent", headerName: "Percent Change", flex: 0.5, type: "number" },
-    { field: "open", headerName: "Open", flex: 0.3, type: "number" },
-    { field: "high", headerName: "High", flex: 0.3, type: "number" },
-    { field: "low", headerName: "Low", flex: 0.3, type: "number" },
-    { field: "close", headerName: "Close", flex: 0.3, type: "number" },
-    {
-      field: "Buy",
-      headerName: "Buy",
-      sortable: false,
-      renderCell: (params) => (
-        <Button
-          onClick={() => history("/buyStock", { state: params.row })}
-          variant="contained"
-          color="success"
-        >
-          Buy
-        </Button>
-      ),
-    },
-    {
-      field: "Sell",
-      headerName: "Sell",
-      sortable: false,
-      renderCell: (params) => (
-        <Button
-          onClick={() => history("/sellStock", { state: params.row })}
-          variant="outlined"
-          color="error"
-        >
-          Sell
-        </Button>
-      ),
-    },
+    { field: "ticker", headerName: "Stock Ticker", flex: 1 },
     {
       field: "Delete",
-      headerName: "Delete",
+      headerName: "Remove",
       sortable: false,
       renderCell: (params) => (
         <DeleteIcon
-          onClick={() => deleteRow(params.row.id)}
+          onClick={() => deleteWatchlistItem(params.row.ticker)}
           style={{ cursor: "pointer", color: "red" }}
-        />
-      ),
-    },
-    {
-      field: "Details",
-      headerName: "Details",
-      sortable: false,
-      renderCell: (params) => (
-        <AddCircleOutlineIcon
-          onClick={() => history("/details", { state: params.row })}
-          style={{ cursor: "pointer" }}
         />
       ),
     },
@@ -675,7 +617,6 @@ const Watchlist = () => {
         sx={{
           "& .MuiDataGrid-root": { border: "none" },
           "& .MuiDataGrid-cell": { borderBottom: "none" },
-          "& .name-column--cell": { color: colors.greenAccent[300] },
           "& .MuiDataGrid-columnHeaders": { backgroundColor: colors.blueAccent[700], borderBottom: "none" },
           "& .MuiDataGrid-virtualScroller": { backgroundColor: colors.primary[400] },
           "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: colors.blueAccent[700] },
