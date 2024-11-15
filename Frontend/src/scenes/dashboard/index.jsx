@@ -300,6 +300,8 @@ import axios from "axios";
 import { tokens } from "../../theme";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
+import { rows } from "../../finalStockData";
+
 const Dashboard = () => {
   const { user } = useAuthContext();
   const [page, setPage] = React.useState(0);
