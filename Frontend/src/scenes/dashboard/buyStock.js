@@ -22,7 +22,7 @@ const BuyStock = () => {
             try {
                 // Simulate fetching price (replace with API integration if needed)
                 const response = await axios.get(
-                    `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=your_finnhub_api_key`
+                    `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=ce80b8aad3i4pjr4v2ggce80b8aad3i4pjr4v2h0`
                 );
                 setCurrentPrice(response.data.c); // Update current price
             } catch (err) {
@@ -73,7 +73,7 @@ const BuyStock = () => {
                 sm={4}
                 md={7}
                 sx={{
-                    backgroundImage: 'url(https://source.unsplash.com/random)',
+                    backgroundImage: 'url(https://images.unsplash.com/photo-1579226905180-636b76d96082?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8dHJhZGluZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60)',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
