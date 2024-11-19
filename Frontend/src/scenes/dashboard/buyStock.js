@@ -54,7 +54,7 @@ const BuyStock = () => {
             };
 
             // Make a transaction request
-            const response = await axios.post(`/api/transaction`, payload);
+            const response = await axios.post(`https://act-production-5e24.up.railway.app/api/buy`, payload);
 
             // If successful, navigate to portfolio
             alert(response.data.message || 'Stock purchased successfully');
