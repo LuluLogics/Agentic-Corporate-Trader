@@ -55,7 +55,8 @@ const Topbar = () => {
 
   // Redirect to payment page when wallet icon is clicked
   const handleWalletClick = () => {
-    navigate("https://buy.stripe.com/test_28o02c2cPglb5O0289"); // Replace with your actual payment page route
+    const stripePaymentLink = "https://buy.stripe.com/test_28o02c2cPglb5O0289";
+    window.location.href = stripePaymentLink;
   };
 
   return (
