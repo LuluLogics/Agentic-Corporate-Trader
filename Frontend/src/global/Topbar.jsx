@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import { useLogout } from "./../hooks/useLogout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Import Axios for API calls
+import { rows } from "../Symbol";
 
 const filterOptions = createFilterOptions({
   matchFrom: "any",
@@ -34,7 +35,7 @@ const Topbar = () => {
       if (user?.id) {
         try {
           const response = await axios.get(
-            `https://your-api-url.com/api/user/${user.id}/balance`
+            `https://act-production-5e24.up.railway.app/api/user/balance/${user.id}`
           );
           setUserBal(response.data.balance); // Assuming `balance` is returned in the response
         } catch (error) {
