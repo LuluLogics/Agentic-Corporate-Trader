@@ -24,47 +24,34 @@ const Portfolio = () => {
       console.error("User ID is missing. Please log in again.");
       return;
     }
-
+  
     try {
       // API call to the backend
       const response = await axios.get(
         `https://act-production-5e24.up.railway.app/api/portfolio/${user.id}`
       );
-
-      const portfolioData = response.data;
-
-      // Calculate totals
-      let totalInvestedAmount = 0;
-      let totalCurrentAmount = 0;
-      let totalProfitOrLoss = 0;
-
-      // Transform data for the DataGrid
-      const transformedData = portfolioData.map((stock) => {
-        totalInvestedAmount += stock.investedAmount || 0;
-        totalCurrentAmount += stock.currentAmount || 0;
-        totalProfitOrLoss += stock.profitLoss || 0;
-
-        return {
-          id: stock.id, // Unique ID for the grid
+  
+      const { portfolio, totals } = response.data;
+  
+      // Set totals for UI
+      setInvAmt(totals.investedAmount);
+      setCurrAmt(totals.currentAmount);
+      setTProfit(totals.profitLoss);
+  
+      // Populate the rows for DataGrid
+      setRows(
+        portfolio.map((stock) => ({
+          id: stock.id,
           name: stock.name,
           symbol: stock.symbol,
           today: stock.currentPrice || "N/A",
           buyPrice: stock.averagePrice || "N/A",
-          shares: stock.quantity || "N/A",
+          shares: stock.shares || "N/A",
           currAmount: stock.currentAmount || "N/A",
           invAmount: stock.investedAmount || "N/A",
           profit: stock.profitLoss || "N/A",
-          open: stock.open || "N/A",
-          high: stock.high || "N/A",
-          low: stock.low || "N/A",
-          close: stock.close || "N/A",
-        };
-      });
-
-      setInvAmt(totalInvestedAmount);
-      setCurrAmt(totalCurrentAmount);
-      setTProfit(totalProfitOrLoss);
-      setRows(transformedData);
+        }))
+      );
     } catch (error) {
       console.error("Error fetching portfolio:", error.response?.data || error.message);
     } finally {
