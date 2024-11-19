@@ -3,6 +3,7 @@ import { TextField, Button, Box, Grid, Typography, Avatar, Paper, Alert } from '
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import CssBaseline from "@mui/material/CssBaseline";
 
 const BuyStock = () => {
     const [currentPrice, setCurrentPrice] = useState(null); // Current market price of the stock
