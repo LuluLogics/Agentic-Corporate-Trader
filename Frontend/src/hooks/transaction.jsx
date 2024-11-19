@@ -1,34 +1,28 @@
 import { useState } from 'react';
+import axios from 'axios';
 
-export const useTransaction = () =>{
+export const useTransaction = () => {
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const transaction = async (user,value) =>{
-        setIsLoading(true)
-        setError(null)
-        
+    const transaction = async (user, payload) => {
+        setIsLoading(true);
+        setError(null);
 
-        const url = `http://localhost:8080/trade/${user.id}`;
-        const response = await fetch (url, {
-            method: 'POST',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify(value)
-        })
-        const json = await response.json()
+        try {
+            const response = await axios.post(`https://act-production-5e24.up.railway.app/api/transaction`, {
+                userId: user.id,
+                ...payload,
+            });
 
-        if(!response.ok){
-            setIsLoading(false)
-            setError(json.Error)
-            return false;
-        }
-        if(response.ok){
-            // save the user to local browser storage
-            // Update the auth context
             setIsLoading(false);
-            return true;
+            return response.data; // Success response
+        } catch (err) {
+            setIsLoading(false);
+            setError(err.response?.data?.error || 'Transaction failed');
+            throw err;
         }
+    };
 
-    }
-    return ({ transaction,  error, isLoading });
+    return { transaction, error, isLoading };
 };

@@ -550,38 +550,64 @@ const Watchlist = () => {
   // Fetch watchlisted stocks for the current user
   const fetchWatchlist = async () => {
     if (!userId) {
-      console.error("User ID is missing or undefined.");
-      alert("User ID is missing. Please log in again.");
-      return;
+        console.error("User ID is missing or undefined.");
+        alert("User ID is missing. Please log in again.");
+        return;
     }
 
     try {
-      const response = await axios.get(
-        `https://act-production-5e24.up.railway.app/api/watchlist/${userId}`
-      );
-      console.log("Fetched watchlist:", response.data);
+        const response = await axios.get(
+            `https://act-production-5e24.up.railway.app/api/watchlist/${userId}`
+        );
+        console.log("Fetched watchlist:", response.data);
 
-      // Transform the data for the DataGrid
-      const transformedData = response.data.map((stock, index) => ({
-        id: index, // Unique ID for DataGrid
-        ticker: stock.ticker,
-        name: stock.ticker, 
-        symbol: stock.ticker,
-        today: "N/A", 
-        Percent: "N/A", 
-        open: "N/A", 
-        high: "N/A", 
-        low: "N/A", 
-        close: "N/A", 
-      }));
+        const transformedData = await Promise.all(
+            response.data.map(async (stock, index) => {
+                try {
+                    const stockUrl = `https://finnhub.io/api/v1/quote?symbol=${stock.ticker}&token=ce80b8aad3i4pjr4v2ggce80b8aad3i4pjr4v2h0`;
+                    const stockResponse = await axios.get(stockUrl);
+                    const stockData = stockResponse.data;
 
-      setRows(transformedData);
+                    return {
+                        id: index, // Unique ID for DataGrid
+                        name: stock.ticker, // Placeholder for company name (adjust if needed)
+                        symbol: stock.ticker, // Symbol of the stock
+                        today: stockData.c || "N/A", // Current price
+                        Percent: stockData.dp ? `${stockData.dp}%` : "N/A", // Percent change
+                        open: stockData.o || "N/A", // Open price
+                        high: stockData.h || "N/A", // High price
+                        low: stockData.l || "N/A", // Low price
+                        close: stockData.pc || "N/A", // Previous close price
+                        delete: stock.ticker, // For delete functionality
+                        ids: stock.ticker, // Maintain unique reference for operations
+                    };
+                } catch (stockError) {
+                    console.error(`Error fetching stock data for ${stock.ticker}:`, stockError);
+                    return {
+                        id: index,
+                        name: stock.ticker,
+                        symbol: stock.ticker,
+                        today: "N/A",
+                        Percent: "N/A",
+                        open: "N/A",
+                        high: "N/A",
+                        low: "N/A",
+                        close: "N/A",
+                        delete: stock.ticker,
+                        ids: stock.ticker,
+                    };
+                }
+            })
+        );
+
+        setRows(transformedData);
     } catch (error) {
-      console.error("Error fetching watchlist:", error.response?.data || error.message);
+        console.error("Error fetching watchlist:", error.response?.data || error.message);
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
 
   // Delete a stock from the user's watchlist
   const deleteWatchlistItem = async (stockTicker) => {
