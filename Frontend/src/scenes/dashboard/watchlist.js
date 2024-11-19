@@ -565,14 +565,14 @@ const Watchlist = () => {
       const transformedData = response.data.map((stock, index) => ({
         id: index, // Unique ID for DataGrid
         ticker: stock.ticker,
-        name: stock.ticker, // Assuming stock name is same as ticker for simplicity
+        name: stock.ticker, 
         symbol: stock.ticker,
-        today: "N/A", // Placeholder for stock details
-        Percent: "N/A", // Placeholder for stock details
-        open: "N/A", // Placeholder for stock details
-        high: "N/A", // Placeholder for stock details
-        low: "N/A", // Placeholder for stock details
-        close: "N/A", // Placeholder for stock details
+        today: "N/A", 
+        Percent: "N/A", 
+        open: "N/A", 
+        high: "N/A", 
+        low: "N/A", 
+        close: "N/A", 
       }));
 
       setRows(transformedData);
