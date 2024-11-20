@@ -197,6 +197,8 @@
 // }
 
 
+
+//FIREBASE SETUP
 // import React, { useState } from 'react';
 // import {
 //     Avatar, Button, CssBaseline, TextField, Typography, Paper,
@@ -338,196 +340,144 @@
 //     );
 // }
 
-
 import React, { useState, useEffect } from 'react';
-import {
-    Avatar, Button, CssBaseline, TextField, Typography, Paper,
-    Box, Grid, Alert
-} from '@mui/material';
+import { TextField, Button, Box, Grid, Typography, Avatar, Paper, Alert } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { db } from '../../firebaseConfig'; // Firebase config file
-import { doc, updateDoc, increment } from 'firebase/firestore';
-import axios from 'axios'; // For API calls
+import CssBaseline from "@mui/material/CssBaseline";
 
-const theme = createTheme();
-
-export default function SellStock() {
+const SellStock = () => {
+    const [currentPrice, setCurrentPrice] = useState(null); // Current market price of the stock
     const [quantity, setQuantity] = useState('');
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [priceDetails, setPriceDetails] = useState(null); // Full price details
-
+    const [total, setTotal] = useState(0); // Total earnings = price * quantity
+    const [error, setError] = useState(null); // Error message handling
     const navigate = useNavigate();
     const location = useLocation();
 
-    const user = JSON.parse(localStorage.getItem('user'));
-    const { symbol, name, availableShares } = location.state;
+    const user = JSON.parse(localStorage.getItem('user')); // Fetch user details from localStorage
+    const { symbol, name } = location.state; // Stock details from navigation state
 
-    // Fetch the full price details from Finnhub
+    // Fetch the current price of the stock
     useEffect(() => {
-        const fetchPriceDetails = async () => {
+        const fetchPrice = async () => {
             try {
+                // Simulate fetching price (replace with API integration if needed)
                 const response = await axios.get(
-                    `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=YOUR_API_KEY`
+                    `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=ce80b8aad3i4pjr4v2ggce80b8aad3i4pjr4v2h0`
                 );
-
-                const { o, h, l, c, pc } = response.data; // Extract open, high, low, current, and previous close prices
-                setPriceDetails({
-                    open: o,
-                    high: h,
-                    low: l,
-                    current: c,
-                    previousClose: pc,
-                });
+                setCurrentPrice(response.data.c); // Update current price
             } catch (err) {
-                setError('Failed to fetch the latest price details. Please try again later.');
+                setError('Failed to fetch current stock price');
             }
         };
-        fetchPriceDetails();
+        fetchPrice();
     }, [symbol]);
+
+    // Calculate the total earnings whenever quantity changes
+    useEffect(() => {
+        if (currentPrice && quantity) {
+            setTotal(currentPrice * quantity);
+        }
+    }, [currentPrice, quantity]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError(null);
-        setSuccess(false);
-
-        const quantityToSell = parseInt(quantity, 10);
-
-        if (!quantityToSell || quantityToSell <= 0 || quantityToSell > availableShares) {
-            setError('Invalid quantity. Please check your available shares.');
-            setLoading(false);
-            return;
-        }
 
         try {
-            // Update user's stock holdings in Firebase
-            const userDocRef = doc(db, 'users', user.id);
-            await updateDoc(userDocRef, {
-                [`stocks.${symbol}`]: increment(-quantityToSell),
-                balance: increment(priceDetails.current * quantityToSell), // Adjust balance based on API price
-            });
+            const payload = {
+                userId: user.id,
+                symbol,
+                name,
+                quantity: parseInt(quantity, 10),
+                price: currentPrice,
+                totalEarnings: total,
+            };
 
-            setSuccess(true);
-            navigate('/portfolio'); // Navigate back to portfolio
+            // Make a transaction request for selling
+            const response = await axios.post(`https://act-production-5e24.up.railway.app/api/sell`, payload);
+
+            // If successful, navigate to portfolio
+            alert(response.data.message || 'Stock sold successfully');
+            navigate('/portfolio');
         } catch (err) {
-            console.error('Error processing transaction:', err);
-            setError('Failed to process the transaction. Please try again.');
-        } finally {
-            setLoading(false);
+            setError(err.response?.data?.error || 'An error occurred during the transaction');
         }
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Grid container component="main" sx={{ height: '100vh' }}>
-                <CssBaseline />
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1579226905180-636b76d96082?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8dHJhZGluZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                    <Box
-                        sx={{
-                            my: 8,
-                            mx: 4,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
+        <Grid container component="main" sx={{ height: '100vh' }}>
+            <CssBaseline />
+            <Grid
+                item
+                xs={false}
+                sm={4}
+                md={7}
+                sx={{
+                    backgroundImage: 'url(https://images.unsplash.com/photo-1579226905180-636b76d96082?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8dHJhZGluZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60)',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            />
+            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sell Stock
+                    </Typography>
+                    {error && <Alert severity="error">{error}</Alert>}
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="name"
+                            label="Stock Name"
+                            value={name}
+                            disabled
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="currentPrice"
+                            label="Current Price"
+                            value={currentPrice ? `$${currentPrice.toFixed(2)}` : 'Loading...'}
+                            disabled
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="quantity"
+                            label="Quantity"
+                            type="number"
+                            value={quantity}
+                            onChange={(e) => setQuantity(e.target.value)}
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="total"
+                            label="Total Earnings"
+                            value={total ? `$${total.toFixed(2)}` : '0.00'}
+                            disabled
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={!quantity || !currentPrice}
+                        >
                             Sell Stock
-                        </Typography>
-                        {error && <Alert severity="error">{error}</Alert>}
-                        {success && <Alert severity="success">Stock sold successfully!</Alert>}
-                        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                            <TextField
-                                margin="normal"
-                                fullWidth
-                                id="name"
-                                label="Stock Name"
-                                value={name}
-                                disabled
-                            />
-                            <TextField
-                                margin="normal"
-                                fullWidth
-                                id="currentPrice"
-                                label="Current Price"
-                                value={priceDetails?.current ? `$${priceDetails.current.toFixed(2)}` : 'Loading...'}
-                                disabled
-                            />
-                            <TextField
-                                margin="normal"
-                                fullWidth
-                                id="openPrice"
-                                label="Open Price"
-                                value={priceDetails?.open ? `$${priceDetails.open.toFixed(2)}` : 'Loading...'}
-                                disabled
-                            />
-                            <TextField
-                                margin="normal"
-                                fullWidth
-                                id="highPrice"
-                                label="High Price"
-                                value={priceDetails?.high ? `$${priceDetails.high.toFixed(2)}` : 'Loading...'}
-                                disabled
-                            />
-                            <TextField
-                                margin="normal"
-                                fullWidth
-                                id="lowPrice"
-                                label="Low Price"
-                                value={priceDetails?.low ? `$${priceDetails.low.toFixed(2)}` : 'Loading...'}
-                                disabled
-                            />
-                            <TextField
-                                margin="normal"
-                                fullWidth
-                                id="prevClose"
-                                label="Previous Close Price"
-                                value={priceDetails?.previousClose ? `$${priceDetails.previousClose.toFixed(2)}` : 'Loading...'}
-                                disabled
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="quantity"
-                                label="Quantity to Sell"
-                                type="number"
-                                value={quantity}
-                                onChange={(e) => setQuantity(e.target.value)}
-                                helperText={`You own ${availableShares} shares.`}
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                disabled={loading || !quantity || !priceDetails}
-                            >
-                                {loading ? 'Processing...' : 'Sell Stock'}
-                            </Button>
-                        </Box>
+                        </Button>
                     </Box>
-                </Grid>
+                </Box>
             </Grid>
-        </ThemeProvider>
+        </Grid>
     );
-}
+};
+
+export default SellStock;
