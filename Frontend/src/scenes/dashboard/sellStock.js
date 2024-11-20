@@ -347,7 +347,7 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { db } from '../firebaseConfig'; // Firebase config file
+import { db } from '../../firebaseConfig'; // Firebase config file
 import { doc, updateDoc, increment } from 'firebase/firestore';
 import axios from 'axios'; // For API calls
 
