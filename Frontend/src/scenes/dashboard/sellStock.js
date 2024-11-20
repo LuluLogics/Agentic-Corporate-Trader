@@ -205,7 +205,7 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { db } from '../Firebase'; // Firebase config file
+import { db } from '../firebaseConfig'; // Firebase config file
 import { doc, updateDoc, increment, arrayRemove } from 'firebase/firestore';
 
 const theme = createTheme();
