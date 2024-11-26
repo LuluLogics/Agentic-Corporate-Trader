@@ -12,16 +12,14 @@ import Details from "./scenes/dashboard/details";
 import BuyStock from "./scenes/dashboard/buyStock";
 import SellStock from "./scenes/dashboard/sellStock";
 import LandingPage from "./global/LandingPage";
-// import LandingPage from "./global/LandingPage"
 import Newz from "./scenes/dashboard/news";
 import { useState } from "react";
-
 import IPO from "./scenes/dashboard/ipo";
 import Copyright from "./global/Copyright";
 import Portfolio from "./scenes/dashboard/Portfolio";
 import Orders from "./scenes/dashboard/tradeHistory.js";
 import Testimonials from "./global/Testimonials.jsx";
-
+import Clients from "./scenes/dashboard/Clients"; // Import the Clients screen
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -32,10 +30,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="app">
-          {/* <HamburgerMenu /> */}
           <main className="context">
-            {/* <Topbar className="abc">
-          </Topbar> */}
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route
@@ -55,9 +50,8 @@ function App() {
                   </>
                 }
               />
-              {/* <Route path="/dashboard" element = {<Dashboard />} /> */}
-              <Route path="/register" element={<><Register/><Copyright /></>} />
-              <Route path="/login" element={<><Login/><Copyright /></>} />
+              <Route path="/register" element={<><Register /><Copyright /></>} />
+              <Route path="/login" element={<><Login /><Copyright /></>} />
               <Route
                 path="/watchlist"
                 element={
@@ -74,7 +68,6 @@ function App() {
                   </>
                 }
               />
-
               <Route
                 path="/details"
                 element={
@@ -91,7 +84,6 @@ function App() {
                   </>
                 }
               />
-
               <Route
                 path="/news"
                 element={
@@ -108,7 +100,6 @@ function App() {
                   </>
                 }
               />
-
               <Route
                 path="/ipo"
                 element={
@@ -173,8 +164,7 @@ function App() {
                   </>
                 }
               />
-
-            <Route
+              <Route
                 path="/orders"
                 element={
                   <>
@@ -190,7 +180,6 @@ function App() {
                   </>
                 }
               />
-
               <Route
                 path="/testimonials"
                 element={
@@ -207,15 +196,23 @@ function App() {
                   </>
                 }
               />
-
-
-
-              {/* <Route path="/details" element={<Details />} /> 
-              
-              <Route path="/login" element={<><Login /> <Copyright /></>} />
-              <Route path="/news" element={<News />} /> 
-
-              <Route path="/watchlist" element = {<Watchlist />} />  */}
+              {/* Add Clients Screen Route */}
+              <Route
+                path="/clients"
+                element={
+                  <>
+                    <div className="app">
+                      <HamburgerMenu />
+                      <main className="context">
+                        <div>
+                          <Topbar display="flex" />
+                        </div>
+                        <Clients />
+                      </main>
+                    </div>
+                  </>
+                }
+              />
             </Routes>
           </main>
         </div>

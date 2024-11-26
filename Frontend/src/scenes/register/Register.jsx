@@ -190,7 +190,7 @@ const Register = () => {
 
     const isSignedUp = await signup(firstName, lastName, email, password);
     if (isSignedUp) {
-        navigate("/home"); // Redirect to home
+        navigate("/clients"); // Redirect to home
     } else {
         console.error("Signup failed. Check error messages above.");
     }
