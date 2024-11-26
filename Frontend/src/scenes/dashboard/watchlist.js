@@ -549,15 +549,22 @@ const Watchlist = () => {
 
   // Fetch watchlisted stocks for the current user
   const fetchWatchlist = async () => {
-    if (!userId) {
-        console.error("User ID is missing or undefined.");
-        alert("User ID is missing. Please log in again.");
+    // Retrieve user ID and client ID from localStorage
+    const user = JSON.parse(localStorage.getItem("user")) || null;
+    const selectedClient = JSON.parse(localStorage.getItem("selectedClient")) || null;
+
+    const userId = user?.id; // Ensure the userId is valid
+    const clientId = selectedClient?.id || selectedClient; // Ensure the clientId is valid
+
+    if (!userId || !clientId) {
+        console.error("User ID or Client ID is missing or undefined.");
+        alert("User ID or Client ID is missing. Please log in again.");
         return;
     }
 
     try {
         const response = await axios.get(
-            `https://act-production-5e24.up.railway.app/api/watchlist/${userId}`
+            `https://act-production-5e24.up.railway.app/api/watchlist/${userId}/${clientId}`
         );
         console.log("Fetched watchlist:", response.data);
 
@@ -600,7 +607,7 @@ const Watchlist = () => {
             })
         );
 
-        setRows(transformedData);
+        setRows(transformedData); // Update the DataGrid rows with transformed data
     } catch (error) {
         console.error("Error fetching watchlist:", error.response?.data || error.message);
     } finally {
