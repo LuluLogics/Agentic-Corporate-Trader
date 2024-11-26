@@ -42,7 +42,7 @@ const Clients = () => {
   const addClient = async () => {
     try {
       await axios.post(
-        `https://act-production-5e24.up.railway.app/api/clients/${user.id}`,
+        `https://act-production-5e24.up.railway.app/api/clients/add/${user.id}`,
         { name: newClientName }
       );
       setNewClientName("");
@@ -139,3 +139,4 @@ const Clients = () => {
 };
 
 export default Clients;
+https
