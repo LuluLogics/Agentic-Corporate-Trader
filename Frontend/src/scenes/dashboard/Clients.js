@@ -43,7 +43,7 @@ const Clients = () => {
     try {
       await axios.post(
         `https://act-production-5e24.up.railway.app/api/clients/add/${user.id}`,
-        { name: newClientName }
+        { clientName: newClientName } // Fix the key to match the API
       );
       setNewClientName("");
       setShowModal(false);
