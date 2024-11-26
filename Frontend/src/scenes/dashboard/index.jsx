@@ -368,23 +368,18 @@ const Dashboard = () => {
               .filter((c) => c.field !== "__check__" && !!c)
               .forEach((c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
       
-          const stockTicker = thisRow.symbol; // Retrieve stock ticker
+          const stockTicker = thisRow.symbol;
       
-          // Retrieve user and client IDs from localStorage
-          const storedData = JSON.parse(localStorage.getItem("user") || "{}");
-          const selectedClient = localStorage.getItem("selectedClient"); // Directly retrieve selectedClient
+          // Retrieve and validate the user and client IDs from localStorage
+          const user = JSON.parse(localStorage.getItem("user"));
+          const selectedClient = JSON.parse(localStorage.getItem("selectedClient"));
       
-          const userId = storedData?.id; // Access user ID
-          const clientId = selectedClient; // Use selectedClient directly as it's already a string
+          const userId = user?.id;
+          const clientId = typeof selectedClient === "string" ? selectedClient : selectedClient?.id;
       
-          console.log("Debugging OnAdd:");
-          console.log("User ID:", userId);
-          console.log("Client ID:", clientId);
-      
-          // Validate that both userId and clientId are available
           if (!userId || !clientId) {
               console.error("User ID or Client ID is missing or undefined.");
-              alert("User or client information is missing. Please ensure you have selected a client.");
+              alert("User ID or Client ID is missing. Please log in again.");
               return;
           }
       
@@ -396,8 +391,8 @@ const Dashboard = () => {
               });
               console.log("Stock added:", response.data);
       
-              // Optionally show confirmation (e.g., using a toast or alert)
-              alert(`Added ${stockTicker} to the watchlist.`);
+              // Optionally show confirmation
+              alert(`Added ${stockTicker} to the watchlist of client ${clientId}.`);
           } catch (error) {
               console.error("Error adding stock to watchlist:", error.response?.data || error.message);
           }
