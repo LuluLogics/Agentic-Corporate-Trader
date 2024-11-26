@@ -14,13 +14,13 @@ const BuyStock = () => {
     const location = useLocation();
 
     const user = JSON.parse(localStorage.getItem('user')); // Fetch user details from localStorage
+    const selectedClient = JSON.parse(localStorage.getItem('selectedClient')); // Fetch selected client from localStorage
     const { symbol, name } = location.state; // Stock details from navigation state
 
     // Fetch the current price of the stock
     useEffect(() => {
         const fetchPrice = async () => {
             try {
-                // Simulate fetching price (replace with API integration if needed)
                 const response = await axios.get(
                     `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=ce80b8aad3i4pjr4v2ggce80b8aad3i4pjr4v2h0`
                 );
@@ -43,9 +43,15 @@ const BuyStock = () => {
         e.preventDefault();
         setError(null);
 
+        if (!selectedClient) {
+            setError("No client selected. Please select a client.");
+            return;
+        }
+
         try {
             const payload = {
                 userId: user.id,
+                clientId: selectedClient,
                 symbol,
                 name,
                 quantity: parseInt(quantity, 10),
