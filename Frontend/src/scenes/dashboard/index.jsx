@@ -368,15 +368,20 @@ const Dashboard = () => {
               .filter((c) => c.field !== "__check__" && !!c)
               .forEach((c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
       
-          const stockTicker = thisRow.symbol; // Adjust as needed
+          const stockTicker = thisRow.symbol; // Retrieve stock ticker
       
-          // Retrieve and validate user and client IDs from localStorage
+          // Retrieve user and client IDs from localStorage
           const storedData = JSON.parse(localStorage.getItem("user") || "{}");
-          const selectedClient = JSON.parse(localStorage.getItem("selectedClient") || "{}");
+          const selectedClient = localStorage.getItem("selectedClient"); // Directly retrieve selectedClient
       
-          const userId = storedData?.id; // Correctly access the user ID using "id"
-          const clientId = selectedClient?.id; // Retrieve the selected client ID
+          const userId = storedData?.id; // Access user ID
+          const clientId = selectedClient; // Use selectedClient directly as it's already a string
       
+          console.log("Debugging OnAdd:");
+          console.log("User ID:", userId);
+          console.log("Client ID:", clientId);
+      
+          // Validate that both userId and clientId are available
           if (!userId || !clientId) {
               console.error("User ID or Client ID is missing or undefined.");
               alert("User or client information is missing. Please ensure you have selected a client.");
@@ -386,14 +391,13 @@ const Dashboard = () => {
           try {
               const response = await axios.post('https://act-production-5e24.up.railway.app/api/watchlist/add', {
                   userId,
-                  clientId, // Include the client ID in the API request
+                  clientId,
                   stockTicker,
               });
-      
               console.log("Stock added:", response.data);
       
               // Optionally show confirmation (e.g., using a toast or alert)
-              alert(`Added ${stockTicker} to the client's watchlist.`);
+              alert(`Added ${stockTicker} to the watchlist.`);
           } catch (error) {
               console.error("Error adding stock to watchlist:", error.response?.data || error.message);
           }
