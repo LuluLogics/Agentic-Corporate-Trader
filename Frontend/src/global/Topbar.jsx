@@ -25,32 +25,33 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const { logout } = useLogout();
-  const [userBal, setUserBal] = useState(0); // User balance state
+  const [balance, setBalance] = useState(0); // State to store selected client's balance
   const user = JSON.parse(localStorage.getItem("user")); // Retrieve user info from localStorage
-  let navigate = useNavigate();
+  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Retrieve selected client from localStorage
+  const navigate = useNavigate();
 
-  // Fetch user balance from the database using an API call
+  // Fetch client balance from the API
   useEffect(() => {
-    const fetchUserBalance = async () => {
-      if (user?.id) {
+    const fetchClientBalance = async () => {
+      if (user?.id && selectedClient?.id) {
         try {
           const response = await axios.get(
-            `https://act-production-5e24.up.railway.app/api/user/balance/${user.id}`
+            `https://act-production-5e24.up.railway.app/api/client/balance/${user.id}/${selectedClient.id}`
           );
-          setUserBal(response.data.balance); // Assuming `balance` is returned in the response
+          setBalance(response.data.balance); // Set the fetched balance
         } catch (error) {
-          console.error("Error fetching user balance:", error);
+          console.error("Error fetching client balance:", error.message);
         }
       }
     };
 
-    fetchUserBalance();
-  }, [user]);
+    fetchClientBalance();
+  }, [user, selectedClient]);
 
   // Logout handler
   const logoutHandler = async (event) => {
-    await logout(); // Logout logic (e.g., Firebase logout)
-    navigate("../"); // Redirect to login or home page
+    await logout(); // Perform logout logic
+    navigate("../"); // Redirect to the login or home page
   };
 
   // Redirect to payment page when wallet icon is clicked
@@ -96,7 +97,7 @@ const Topbar = () => {
             onClick={handleWalletClick} // Redirect to payment page on click
           >
             <AccountBalanceWalletOutlinedIcon sx={{ mr: "10px" }} />
-            ${userBal ? userBal.toFixed(2) : "0.00"}
+            ${balance ? balance.toFixed(2) : "0.00"}
           </IconButton>
 
           {/* Dark Mode Toggle */}
