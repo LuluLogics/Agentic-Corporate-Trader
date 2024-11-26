@@ -618,18 +618,34 @@ const Watchlist = () => {
 
   // Delete a stock from the user's watchlist
   const deleteWatchlistItem = async (stockTicker) => {
-    try {
-      await axios.delete("https://act-production-5e24.up.railway.app/api/watchlist/remove", {
-        data: { userId, stockTicker },
-      });
-      console.log(`Removed ${stockTicker} from watchlist.`);
+    // Retrieve user and selected client from localStorage
+    const storedUser = JSON.parse(localStorage.getItem("user")) || null;
+    const selectedClient = JSON.parse(localStorage.getItem("selectedClient")) || null;
 
-      // Update the rows state
-      setRows((prevRows) => prevRows.filter((row) => row.ticker !== stockTicker));
-    } catch (error) {
-      console.error("Error removing stock from watchlist:", error.response?.data || error.message);
+    const userId = storedUser?.id; // Extract userId
+    const clientId = typeof selectedClient === "string" ? selectedClient : selectedClient?.id; // Ensure clientId is valid
+
+    // Validation check for required IDs
+    if (!userId || !clientId) {
+        console.error("User ID or Client ID is missing or undefined.");
+        alert("User ID or Client ID is missing. Please log in again.");
+        return;
     }
-  };
+
+    try {
+        // Make the API call to delete the stock
+        await axios.delete("https://act-production-5e24.up.railway.app/api/watchlist/remove", {
+            data: { userId, clientId, stockTicker }, // Include userId and clientId in the request
+        });
+
+        console.log(`Removed ${stockTicker} from client's watchlist.`);
+
+        // Update the rows state
+        setRows((prevRows) => prevRows.filter((row) => row.symbol !== stockTicker)); // Update rows to remove the deleted stock
+    } catch (error) {
+        console.error("Error removing stock from client's watchlist:", error.response?.data || error.message);
+    }
+};
 
   useEffect(() => {
     fetchWatchlist();
