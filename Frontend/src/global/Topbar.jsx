@@ -39,23 +39,28 @@ const Topbar = () => {
   }, [user, selectedClient]);
 
   // Fetch client balance from the API
-  const fetchClientBalance = async () => {
-    console.log("Fetching balance for user:", user, "and client:", selectedClient); // Debug
-    if (user?.id && selectedClient?.id) {
-      try {
-        const response = await axios.get(
-          `https://act-production-5e24.up.railway.app/api/client/balance/${user.id}/${selectedClient.id}`
-        );
-        console.log("Balance API Response:", response.data); // Debug API response
-        setBalance(response.data.balance);
-      } catch (error) {
-        console.error("Error fetching client balance:", error.message);
-      }
-    } else {
-      console.warn("User or selectedClient is missing, skipping balance fetch.");
-      setBalance(0);
+  // Fetch client balance from the API
+const fetchClientBalance = async () => {
+  // Ensure selectedClient is either an object or string
+  const clientId = typeof selectedClient === "string" ? selectedClient : selectedClient?.id;
+
+  console.log("Fetching balance for user:", user, "and client:", clientId); // Debug
+  if (user?.id && clientId) {
+    try {
+      const response = await axios.get(
+        `https://act-production-5e24.up.railway.app/api/client/balance/${user.id}/${clientId}`
+      );
+      console.log("Balance API Response:", response.data); // Debug API response
+      setBalance(response.data.balance);
+    } catch (error) {
+      console.error("Error fetching client balance:", error.message);
     }
-  };
+  } else {
+    console.warn("User or clientId is missing, skipping balance fetch.");
+    setBalance(0);
+  }
+};
+
 
   // Fetch balance on page load and whenever the user or selected client changes
   useEffect(() => {
