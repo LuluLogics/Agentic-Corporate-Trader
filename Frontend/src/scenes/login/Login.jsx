@@ -26,7 +26,7 @@ const Login = () => {
     e.preventDefault();
     const isLoggedIn = await login(email, password); // Attempt login using `useLogin`
     if (isLoggedIn) {
-      navigate('../home'); // Redirect to home on success
+      navigate('../clients'); // Redirect to home on success
     }
   };
 
