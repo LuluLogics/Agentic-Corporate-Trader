@@ -26,30 +26,35 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const { logout } = useLogout();
   const [balance, setBalance] = useState(0); // State to store selected client's balance
-  const user = JSON.parse(localStorage.getItem("user")); // Retrieve user info from localStorage
-  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Retrieve selected client from localStorage
   const navigate = useNavigate();
 
-  // Fetch client balance from the API
-  useEffect(() => {
-    const fetchClientBalance = async () => {
-      if (user?.id && selectedClient?.id) {
-        try {
-          const response = await axios.get(
-            `https://act-production-5e24.up.railway.app/api/client/balance/${user.id}/${selectedClient.id}`
-          );
-          setBalance(response.data.balance); // Set the fetched balance
-        } catch (error) {
-          console.error("Error fetching client balance:", error.message);
-        }
-      }
-    };
+  // Retrieve user and selected client info from localStorage
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")) || null;
 
+  // Fetch client balance from the API
+  const fetchClientBalance = async () => {
+    if (user?.id && selectedClient?.id) {
+      try {
+        const response = await axios.get(
+          `https://act-production-5e24.up.railway.app/api/client/balance/${user.id}/${selectedClient.id}`
+        );
+        setBalance(response.data.balance); // Set the fetched balance
+      } catch (error) {
+        console.error("Error fetching client balance:", error.message);
+      }
+    } else {
+      setBalance(0); // Reset balance if no client is selected
+    }
+  };
+
+  // Fetch balance on page load and whenever the user or selected client changes
+  useEffect(() => {
     fetchClientBalance();
-  }, [user, selectedClient]);
+  }, [user, selectedClient]); // Trigger whenever user or selected client changes
 
   // Logout handler
-  const logoutHandler = async (event) => {
+  const logoutHandler = async () => {
     await logout(); // Perform logout logic
     navigate("../"); // Redirect to the login or home page
   };
