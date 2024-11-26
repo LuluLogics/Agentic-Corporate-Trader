@@ -7,19 +7,18 @@ import Dashboard from "./scenes/dashboard";
 import Login from "./scenes/login/Login";
 import Register from "./scenes/register/Register";
 import WatchList from "./scenes/dashboard/watchlist";
-import News from "./data/News/News";
 import Details from "./scenes/dashboard/details";
 import BuyStock from "./scenes/dashboard/buyStock";
 import SellStock from "./scenes/dashboard/sellStock";
 import LandingPage from "./global/LandingPage";
 import Newz from "./scenes/dashboard/news";
-import { useState } from "react";
 import IPO from "./scenes/dashboard/ipo";
-import Copyright from "./global/Copyright";
 import Portfolio from "./scenes/dashboard/Portfolio";
-import Orders from "./scenes/dashboard/tradeHistory.js";
-import Testimonials from "./global/Testimonials.jsx";
+import Orders from "./scenes/dashboard/tradeHistory";
+import Testimonials from "./global/Testimonials";
 import Clients from "./scenes/dashboard/Clients"; // Import the Clients screen
+import Copyright from "./global/Copyright";
+import { useState } from "react";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -29,193 +28,138 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
-          <main className="context">
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route
-                path="/home"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <Dashboard />
-                      </main>
-                    </div>
-                    <Copyright />
-                  </>
-                }
-              />
-              <Route path="/register" element={<><Register /><Copyright /></>} />
-              <Route path="/login" element={<><Login /><Copyright /></>} />
-              <Route
-                path="/watchlist"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <WatchList />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              <Route
-                path="/details"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <Details />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              <Route
-                path="/news"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <Newz />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              <Route
-                path="/ipo"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <IPO />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              <Route
-                path="/buyStock"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <BuyStock />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              <Route
-                path="/sellStock"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <SellStock />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              <Route
-                path="/portfolio"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <Portfolio />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              <Route
-                path="/orders"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <Orders />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              <Route
-                path="/testimonials"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <Testimonials />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-              {/* Add Clients Screen Route */}
-              <Route
-                path="/clients"
-                element={
-                  <>
-                    <div className="app">
-                      <HamburgerMenu />
-                      <main className="context">
-                        <div>
-                          <Topbar display="flex" />
-                        </div>
-                        <Clients />
-                      </main>
-                    </div>
-                  </>
-                }
-              />
-            </Routes>
-          </main>
-        </div>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* Standalone Clients Page */}
+          <Route path="/clients" element={<Clients />} />
+
+          {/* Main App Layout */}
+          <Route
+            path="/home"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <Dashboard />
+                </main>
+                <Copyright />
+              </div>
+            }
+          />
+          <Route
+            path="/watchlist"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <WatchList />
+                </main>
+              </div>
+            }
+          />
+          <Route
+            path="/details"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <Details />
+                </main>
+              </div>
+            }
+          />
+          <Route
+            path="/news"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <Newz />
+                </main>
+              </div>
+            }
+          />
+          <Route
+            path="/ipo"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <IPO />
+                </main>
+              </div>
+            }
+          />
+          <Route
+            path="/buyStock"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <BuyStock />
+                </main>
+              </div>
+            }
+          />
+          <Route
+            path="/sellStock"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <SellStock />
+                </main>
+              </div>
+            }
+          />
+          <Route
+            path="/portfolio"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <Portfolio />
+                </main>
+              </div>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <Orders />
+                </main>
+              </div>
+            }
+          />
+          <Route
+            path="/testimonials"
+            element={
+              <div className="app">
+                <HamburgerMenu />
+                <main className="context">
+                  <Topbar />
+                  <Testimonials />
+                </main>
+              </div>
+            }
+          />
+        </Routes>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

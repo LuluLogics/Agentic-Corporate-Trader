@@ -1,46 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Paper } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import React, { useState, useEffect } from "react";
+import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import axios from "axios";
-import Header from "../../components/Headers";
-import { tokens } from "../../theme";
-import { useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Clients = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  const [clients, setClients] = useState([]); // List of clients
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // Dialog visibility
-  const [newClientName, setNewClientName] = useState(""); // New client name
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+  const [clients, setClients] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [newClientName, setNewClientName] = useState("");
+  const navigate = useNavigate();
 
-  // Fetch clients for the current user
+  // Fetch clients from API
   const fetchClients = async () => {
     try {
-      const response = await axios.get(`https://your-backend-url/api/clients/${user.id}`);
-      setClients(response.data.clients || []);
+      const response = await axios.get(
+        `https://act-production-5e24.up.railway.app/api/clients/${user.id}`
+      );
+      setClients(response.data.clients);
     } catch (error) {
       console.error("Error fetching clients:", error.message);
     }
   };
 
-  // Add a new client
+  // Handle selecting a client
+  const selectClient = (client) => {
+    localStorage.setItem("selectedClient", JSON.stringify(client));
+    navigate("/home");
+  };
+
+  // Handle opening and closing the dialog
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setNewClientName("");
+    setOpen(false);
+  };
+
+  // Handle adding a new client
   const handleAddClient = async () => {
-    if (!newClientName.trim()) {
-      alert("Client name cannot be empty.");
-      return;
-    }
-
     try {
-      const response = await axios.post(`https://your-backend-url/api/clients/add`, {
-        userId: user.id,
-        clientName: newClientName,
-      });
-
-      // Update the clients list after adding
-      setClients([...clients, response.data.newClient]);
-      setNewClientName(""); // Clear the input
-      setIsDialogOpen(false); // Close the dialog
+      const response = await axios.post(
+        `https://act-production-5e24.up.railway.app/api/clients/add`,
+        { userId: user.id, name: newClientName }
+      );
+      setClients([...clients, response.data.client]);
+      handleClose();
     } catch (error) {
       console.error("Error adding client:", error.message);
     }
@@ -50,42 +53,40 @@ const Clients = () => {
     fetchClients();
   }, []);
 
-  const columns = [
-    { field: "name", headerName: "Client Name", flex: 1 },
-    {
-      field: "View",
-      headerName: "View",
-      sortable: false,
-      renderCell: (params) => (
-        <Button
-          onClick={() => {
-            // Navigate to the main site with selected client
-            localStorage.setItem("selectedClient", JSON.stringify(params.row));
-            window.location.href = "/main"; // Change to your main app route
-          }}
-          variant="contained"
-          color="primary"
-        >
-          View
-        </Button>
-      ),
-    },
-  ];
-
   return (
     <Box m="20px">
-      <Header title="Clients" subtitle="Manage Your Clients" />
-      <Paper elevation={3} sx={{ padding: "20px", marginBottom: "20px" }}>
-        <Button variant="contained" color="success" onClick={() => setIsDialogOpen(true)}>
-          Add Client
-        </Button>
-      </Paper>
-      <Box m="40px 0 0 0" height="75vh">
-        <DataGrid rows={clients} columns={columns} components={{ Toolbar: GridToolbar }} />
+      <h1>Clients</h1>
+      <Box>
+        {clients.map((client) => (
+          <Box
+            key={client.id}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
+              p: 2,
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+            }}
+          >
+            <span>{client.name}</span>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => selectClient(client)}
+            >
+              Select
+            </Button>
+          </Box>
+        ))}
       </Box>
+      <Button variant="outlined" color="primary" onClick={handleOpen}>
+        Add Client
+      </Button>
 
-      {/* Add Client Dialog */}
-      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+      {/* Dialog for adding a new client */}
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add New Client</DialogTitle>
         <DialogContent>
           <TextField
@@ -99,11 +100,11 @@ const Clients = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsDialogOpen(false)} color="secondary">
+          <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
           <Button onClick={handleAddClient} color="primary">
-            Create
+            Add
           </Button>
         </DialogActions>
       </Dialog>
