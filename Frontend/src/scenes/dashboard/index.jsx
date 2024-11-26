@@ -370,25 +370,30 @@ const Dashboard = () => {
       
           const stockTicker = thisRow.symbol; // Adjust as needed
       
-          // Retrieve and validate the user ID from localStorage
+          // Retrieve and validate user and client IDs from localStorage
           const storedData = JSON.parse(localStorage.getItem("user") || "{}");
-          const userId = storedData?.id; // Correctly access the user ID using "id"
+          const selectedClient = JSON.parse(localStorage.getItem("selectedClient") || "{}");
       
-          if (!userId) {
-              console.error("User ID is missing or undefined.");
-              alert("User ID is missing. Please log in again.");
+          const userId = storedData?.id; // Correctly access the user ID using "id"
+          const clientId = selectedClient?.id; // Retrieve the selected client ID
+      
+          if (!userId || !clientId) {
+              console.error("User ID or Client ID is missing or undefined.");
+              alert("User or client information is missing. Please ensure you have selected a client.");
               return;
           }
       
           try {
               const response = await axios.post('https://act-production-5e24.up.railway.app/api/watchlist/add', {
                   userId,
+                  clientId, // Include the client ID in the API request
                   stockTicker,
               });
+      
               console.log("Stock added:", response.data);
       
               // Optionally show confirmation (e.g., using a toast or alert)
-              alert(`Added ${stockTicker} to watchlist.`);
+              alert(`Added ${stockTicker} to the client's watchlist.`);
           } catch (error) {
               console.error("Error adding stock to watchlist:", error.response?.data || error.message);
           }
