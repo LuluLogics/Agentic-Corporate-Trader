@@ -403,6 +403,12 @@ const Dashboard = () => {
           }
       };
       
+      
+
+        return <AddCircleOutlineIcon onClick={OnAdd}></AddCircleOutlineIcon>;
+      },
+    },
+  ];
 
   return (
     <>
