@@ -1,0 +1,38 @@
+.client-tile {
+    text-align: center;
+    background-color: #1f2937;
+    padding: 20px;
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  .client-name {
+    color: white;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .client-image {
+    border-radius: 12px;
+    width: 100%;
+    height: auto;
+  }
+  
+  .modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: #1f2937;
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+  }
+  
