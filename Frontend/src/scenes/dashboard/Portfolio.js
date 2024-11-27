@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const Portfolio = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Fetch selected client
   const history = useNavigate();
   const [rows, setRows] = useState([]);
   const [invAmt, setInvAmt] = useState(0);
@@ -18,14 +19,20 @@ const Portfolio = () => {
   const colors = tokens(theme.palette.mode);
 
   const fetchPortfolio = async () => {
+    if (!user || !selectedClient) {
+      console.error("User or selected client is missing.");
+      return;
+    }
+
     try {
       const response = await axios.get(
-        `https://act-production-5e24.up.railway.app/api/portfolio/${user.id}`
+        `https://act-production-5e24.up.railway.app/api/portfolio/${user.id}/${selectedClient.id}`
       );
       const portfolioData = response.data.portfolio || [];
 
       let totalInvestedAmount = 0;
       let totalCurrentAmount = 0;
+
       const updatedPortfolio = await Promise.all(
         portfolioData.map(async (stock) => {
           try {
@@ -34,8 +41,8 @@ const Portfolio = () => {
             );
             const currentPrice = finnHubResponse.data.c || 0;
 
-            const investedAmount = stock.shares * stock.averagePrice;
-            const currentAmount = stock.shares * currentPrice;
+            const investedAmount = stock.quantity * stock.price; // Assuming `price` is the average purchase price
+            const currentAmount = stock.quantity * currentPrice;
             const profitLoss = currentAmount - investedAmount;
 
             totalInvestedAmount += investedAmount;
@@ -45,8 +52,8 @@ const Portfolio = () => {
               id: stock.id,
               name: stock.name,
               symbol: stock.symbol,
-              shares: stock.shares,
-              averagePrice: stock.averagePrice,
+              quantity: stock.quantity,
+              averagePrice: stock.price,
               currentPrice,
               investedAmount,
               currentAmount,
@@ -54,7 +61,13 @@ const Portfolio = () => {
             };
           } catch (error) {
             console.error(`Error fetching data for ${stock.symbol}:`, error.message);
-            return { ...stock, currentPrice: 0, investedAmount: 0, currentAmount: 0, profitLoss: 0 };
+            return {
+              ...stock,
+              currentPrice: 0,
+              investedAmount: 0,
+              currentAmount: 0,
+              profitLoss: 0,
+            };
           }
         })
       );
@@ -77,7 +90,7 @@ const Portfolio = () => {
     { field: "symbol", headerName: "Symbol", flex: 0.5 },
     { field: "currentPrice", headerName: "Current Price", flex: 0.5, type: "number" },
     { field: "averagePrice", headerName: "Average Price", flex: 0.5, type: "number" },
-    { field: "shares", headerName: "Quantity", flex: 0.5, type: "number" },
+    { field: "quantity", headerName: "Quantity", flex: 0.5, type: "number" },
     { field: "currentAmount", headerName: "Current Amount", flex: 0.5, type: "number" },
     { field: "investedAmount", headerName: "Invested Amount", flex: 0.5, type: "number" },
     { field: "profitLoss", headerName: "Profit/Loss", flex: 0.5, type: "number" },
@@ -101,15 +114,54 @@ const Portfolio = () => {
     <Box m="20px">
       <Header title="Portfolio" />
       <Paper elevation={3}>
-        <Box sx={{ display: "flex", justifyContent: "center", p: 5, m: 1, bgcolor: "background.paper", borderRadius: 1 }}>
-          <div style={{ margin: "5px 15px", fontWeight: "bold", paddingRight: "50px", fontSize: "x-large" }}>
-            {"Invested Amount: "} <div style={{ color: "blue", textAlign: "center" }}>$ {invAmt.toFixed(2)}</div>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            p: 5,
+            m: 1,
+            bgcolor: "background.paper",
+            borderRadius: 1,
+          }}
+        >
+          <div
+            style={{
+              margin: "5px 15px",
+              fontWeight: "bold",
+              paddingRight: "50px",
+              fontSize: "x-large",
+            }}
+          >
+            {"Invested Amount: "}
+            <div style={{ color: "blue", textAlign: "center" }}>
+              $ {invAmt.toFixed(2)}
+            </div>
           </div>
-          <div style={{ margin: "5px 15px", fontWeight: "bold", paddingRight: "50px", fontSize: "x-large" }}>
-            {"Current Amount: "} <div style={{ color: "blue", textAlign: "center" }}>$ {currAmt.toFixed(2)}</div>
+          <div
+            style={{
+              margin: "5px 15px",
+              fontWeight: "bold",
+              paddingRight: "50px",
+              fontSize: "x-large",
+            }}
+          >
+            {"Current Amount: "}
+            <div style={{ color: "blue", textAlign: "center" }}>
+              $ {currAmt.toFixed(2)}
+            </div>
           </div>
-          <div style={{ margin: "5px 15px", fontWeight: "bold", paddingRight: "50px", fontSize: "x-large" }}>
-            {"Profit/Loss: "} <div style={{ color: "#03C03C", textAlign: "center" }}>$ {tProfit.toFixed(2)}</div>
+          <div
+            style={{
+              margin: "5px 15px",
+              fontWeight: "bold",
+              paddingRight: "50px",
+              fontSize: "x-large",
+            }}
+          >
+            {"Profit/Loss: "}
+            <div style={{ color: "#03C03C", textAlign: "center" }}>
+              $ {tProfit.toFixed(2)}
+            </div>
           </div>
         </Box>
       </Paper>
