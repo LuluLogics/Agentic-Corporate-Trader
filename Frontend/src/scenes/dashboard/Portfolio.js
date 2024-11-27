@@ -8,8 +8,8 @@ import { useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Portfolio = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Fetch selected client
+  const user = JSON.parse(localStorage.getItem("user")); // Get the logged-in user
+  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Get the selected client
   const history = useNavigate();
   const [rows, setRows] = useState([]);
   const [invAmt, setInvAmt] = useState(0);
@@ -18,6 +18,7 @@ const Portfolio = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  // Fetch the portfolio for the selected client
   const fetchPortfolio = async () => {
     if (!user || !selectedClient) {
       console.error("User or selected client is missing.");
@@ -26,8 +27,9 @@ const Portfolio = () => {
 
     try {
       const response = await axios.get(
-        `https://act-production-5e24.up.railway.app/api/portfolio/${user.id}/${selectedClient.id}`
+        `https://act-production-5e24.up.railway.app/api/portfolio/${user.id}/${selectedClient}`
       );
+
       const portfolioData = response.data.portfolio || [];
 
       let totalInvestedAmount = 0;
@@ -41,7 +43,7 @@ const Portfolio = () => {
             );
             const currentPrice = finnHubResponse.data.c || 0;
 
-            const investedAmount = stock.quantity * stock.price; // Assuming `price` is the average purchase price
+            const investedAmount = stock.quantity * stock.averagePrice;
             const currentAmount = stock.quantity * currentPrice;
             const profitLoss = currentAmount - investedAmount;
 
@@ -53,7 +55,7 @@ const Portfolio = () => {
               name: stock.name,
               symbol: stock.symbol,
               quantity: stock.quantity,
-              averagePrice: stock.price,
+              averagePrice: stock.averagePrice,
               currentPrice,
               investedAmount,
               currentAmount,
@@ -81,6 +83,7 @@ const Portfolio = () => {
     }
   };
 
+  // Fetch portfolio on component mount
   useEffect(() => {
     fetchPortfolio();
   }, []);
@@ -159,7 +162,7 @@ const Portfolio = () => {
             }}
           >
             {"Profit/Loss: "}
-            <div style={{ color: "#03C03C", textAlign: "center" }}>
+            <div style={{ color: tProfit >= 0 ? "#03C03C" : "red", textAlign: "center" }}>
               $ {tProfit.toFixed(2)}
             </div>
           </div>
