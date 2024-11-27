@@ -137,7 +137,7 @@ const Portfolio = () => {
           >
             {"Invested Amount: "}
             <div style={{ color: "blue", textAlign: "center" }}>
-              $ {invAmt.toFixed(2)}
+              € {invAmt.toFixed(2)}
             </div>
           </div>
           <div
@@ -150,7 +150,7 @@ const Portfolio = () => {
           >
             {"Current Amount: "}
             <div style={{ color: "blue", textAlign: "center" }}>
-              $ {currAmt.toFixed(2)}
+              € {currAmt.toFixed(2)}
             </div>
           </div>
           <div
@@ -163,7 +163,7 @@ const Portfolio = () => {
           >
             {"Profit/Loss: "}
             <div style={{ color: tProfit >= 0 ? "#03C03C" : "red", textAlign: "center" }}>
-              $ {tProfit.toFixed(2)}
+              € {tProfit.toFixed(2)}
             </div>
           </div>
         </Box>

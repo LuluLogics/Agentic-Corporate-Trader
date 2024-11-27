@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "firebase": "^11.0.2",
     "react-ts-tradingview-widgets": "^1.2.5"
   }
 }
