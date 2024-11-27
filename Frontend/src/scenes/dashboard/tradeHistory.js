@@ -274,7 +274,7 @@ import { tokens } from "../../theme";
 import Header from "../../components/Headers";
 import { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import { db } from "../firebaseConfig"; // Import Firebase configuration
+import { db } from "../../../firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 const Portfolio = () => {
