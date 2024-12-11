@@ -93,7 +93,7 @@ const Clients = () => {
           marginTop: "1%",
           paddingTop: "8%",
           paddingBottom: "2%",
-          marginLeft: "10%",
+          marginLeft: "9%", //was 10%
           fontSize: 50,
           color: "white",
           textAlign: "center",
@@ -146,8 +146,8 @@ const Clients = () => {
 
       <Copyright sx={{
           position:"absolute",
-          mt:"45%", 
-          ml:"35%", 
+          mt:"55%", 
+          ml:"30%", 
           color:"white"}}/>
 
     </Box>
