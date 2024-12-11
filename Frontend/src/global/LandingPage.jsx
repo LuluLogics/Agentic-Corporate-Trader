@@ -120,7 +120,7 @@ export default function ButtonAppBar() {
 
         <Copyright sx={{
           position:"absolute",
-          mt:"95%", 
+          mt:"45%", 
           ml:"35%", 
           color:"white"}}/>
 
