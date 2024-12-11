@@ -205,8 +205,8 @@ const Login = () => {
               src="http://www.jonesday.com/-/media/images/news/2021/07/spoofing_and_disruptive_trading_social.jpg"
               alt="Stock Graph"
               style={{
-                width: "600px",
-                height: "auto",
+                width: "900px",
+                height: "600px",
                 maxWidth: "100%",
                 objectFit: "cover",
                 borderRadius: "1rem"
