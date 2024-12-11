@@ -119,11 +119,11 @@ export default function ButtonAppBar() {
       </Typography>
 
         <Copyright sx={{
-          color: "white",
-          textAlign: "center",
-          p: 2,       // paddy
-          mt: "auto"  // Pushes 2 bottom
-        }}/> 
+          position:"absolute",
+          mt:"5%", 
+          ml:"35%", 
+          color:"white"}}/>
+
 
       </Typography>
       
