@@ -6,28 +6,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
-import Grid from '@mui/material/Grid'; // Grid version 1
-// import {
-//   Drawer,
-//   List,
-//   ListItem,
-//   ListItemText,
-// } from "@material-ui/core";
+import Grid from '@mui/material/Grid'; 
 import IconButton from '@mui/material/IconButton';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import { height } from '@mui/system';
 import Copyright from './Copyright';
-
-/// import { width } from '@mui/system';
-// import { useHistory } from "react-router-dom";
-// const history = useHistory();
-// function loginHandler (){
-    
-
-// //   function handleClick() {
-//     // history.push("/home");
-// }
-
 
 export default function ButtonAppBar() {
 
@@ -51,9 +34,8 @@ export default function ButtonAppBar() {
 
   }
 
-
   return (
-    <Box sx={{width:"100%", flexGrow: 1,backgroundColor:"#141b2d"}}>
+    <Box sx={{width:"100%", height:"100%", flexGrow: 1,backgroundColor:"#141b2d"}}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
