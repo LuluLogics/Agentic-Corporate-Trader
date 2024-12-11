@@ -35,8 +35,16 @@ export default function ButtonAppBar() {
   }
 
   return (
-    <Box sx={{width:"100%", height:"100%", flexGrow: 1,backgroundColor:"#141b2d"}}>
-      <AppBar position="static">
+    <Box 
+      sx={{
+        width: "100%",
+        minHeight: "100vh", // Ensures full viewport coverage
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#141b2d"
+      }}
+    >
+        <AppBar position="static">
         <Toolbar>
           <IconButton
               size="large"
