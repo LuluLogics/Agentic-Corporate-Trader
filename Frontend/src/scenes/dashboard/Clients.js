@@ -60,7 +60,16 @@ const Clients = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", flexGrow: 1, backgroundColor: "#141b2d" }}>
+    // <Box sx={{ width: "100%", flexGrow: 1, backgroundColor: "#141b2d" }}>
+    <Box 
+      sx={{ 
+        width: "100%", 
+        minHeight: "100vh", // Ensures full viewport coverage
+        display: "flex", 
+        flexDirection: "column",
+        backgroundColor: "#141b2d" 
+      }}
+    >
       <AppBar position="static">
         <Toolbar>
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
@@ -133,7 +142,14 @@ const Clients = () => {
         </Box>
       </Modal>
 
-      <Copyright sx={{ marginTop: "5%", textAlign: "center", color: "white" }} />
+      {/* <Copyright sx={{ marginTop: "5%", textAlign: "center", color: "white" }} /> */}
+
+      <Copyright sx={{
+          position:"absolute",
+          mt:"45%", 
+          ml:"35%", 
+          color:"white"}}/>
+
     </Box>
   );
 };
