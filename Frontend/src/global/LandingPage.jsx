@@ -85,7 +85,7 @@ export default function ButtonAppBar() {
           <a  class="" 
             target="_blank" rel="noopener noreferrer nofollow">
             <div class="lazyload-wrapper ">
-              <img class="tradeImage1" src="https://media.istockphoto.com/id/943292690/photo/financial-and-technical-data-analysis-graph-showing-stock-market-trends.jpg?s=612x612&w=0&k=20&c=pPx6ScJIqxo60fAExwJRIzYNQ_Jd-l-L78yUIJEzfAY=" width="250" height="180" alt="ios" loading="lazy"/>
+              <img class="tradeImage1" src="https://media.istockphoto.com/id/943292690/photo/financial-and-technical-data-analysis-graph-showing-stock-market-trends.jpg?s=612x612&w=0&k=20&c=pPx6ScJIqxo60fAExwJRIzYNQ_Jd-l-L78yUIJEzfAY=" width="280" height="210" alt="ios" loading="lazy"/>
             </div>
           </a>
       </div>
@@ -94,7 +94,7 @@ export default function ButtonAppBar() {
           <a  class="" 
             target="_blank" rel="noopener noreferrer nofollow">
             <div class="lazyload-wrapper ">
-              <img class="tradeImage1" src="https://media.istockphoto.com/photos/close-up-image-of-a-stock-market-graph-picture-id1213574690?b=1&k=20&m=1213574690&s=612x612&w=0&h=N2lNvavpoTFOjBHIVbKd2BmFj9Q3wjqEpxT5AASB50M=" width="250" height="180" alt="ios" loading="lazy"/>
+              <img class="tradeImage1" src="https://media.istockphoto.com/photos/close-up-image-of-a-stock-market-graph-picture-id1213574690?b=1&k=20&m=1213574690&s=612x612&w=0&h=N2lNvavpoTFOjBHIVbKd2BmFj9Q3wjqEpxT5AASB50M=" width="280" height="210" alt="ios" loading="lazy"/>
             </div>
           </a>
       </div> 
@@ -102,7 +102,7 @@ export default function ButtonAppBar() {
           <a  class="" 
             target="_blank" rel="noopener noreferrer nofollow">
             <div class="lazyload-wrapper ">
-              <img class="tradeImage1" src="https://wallpaperaccess.com/full/1393720.jpg" width="250" height="180" alt="ios" loading="lazy"/>
+              <img class="tradeImage1" src="https://wallpaperaccess.com/full/1393720.jpg" width="280" height="210" alt="ios" loading="lazy"/>
             </div>
           </a>
       </div> 
@@ -110,7 +110,7 @@ export default function ButtonAppBar() {
           <a  class="" 
             target="_blank" rel="noopener noreferrer nofollow">
             <div class="lazyload-wrapper ">
-              <img class="tradeImage1" src="https://the-tech-trend.com/wp-content/uploads/2021/02/How-to-read-Candlestick-Trading-Charts-A-Complete-Guide-for-Beginners.jpg" width="250" height="180" alt="ios" loading="lazy"/>
+              <img class="tradeImage1" src="https://the-tech-trend.com/wp-content/uploads/2021/02/How-to-read-Candlestick-Trading-Charts-A-Complete-Guide-for-Beginners.jpg" width="280" height="210" alt="ios" loading="lazy"/>
             </div>
           </a>
       </div>   
@@ -118,8 +118,13 @@ export default function ButtonAppBar() {
           Learn trading with our virtual platform - powered by LuluLogics
       </Typography>
 
-      <Copyright sx={{position:"absolute",mt:"35%", ml:"35%", color:"white"}}/>
-          
+        <Copyright sx={{
+          color: "white",
+          textAlign: "center",
+          p: 2,       // paddy
+          mt: "auto"  // Pushes 2 bottom
+        }}/> 
+
       </Typography>
       
 
