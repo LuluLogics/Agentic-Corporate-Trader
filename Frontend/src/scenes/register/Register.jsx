@@ -198,7 +198,7 @@ const Register = () => {
         height: "100vh",
         width: "100vw",
         overflow: "hidden",
-        backgroundColor: "#8F87F2" // Light purple background, adjust as needed
+        backgroundColor: "#8F87F2" // Light purple background
       }}
     >
       {/* Header */}
@@ -213,39 +213,33 @@ const Register = () => {
         </Typography>
       </Box>
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <Box
         sx={{
-          display: "flex",
           flex: 1,
+          display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          p: "2rem",
-          gap: "2rem"
+          gap: "4rem",
+          p: "2rem"
         }}
       >
-        {/* Left: Large Image */}
-        <Box
+        {/* Left Side Image */}
+        <Box 
           sx={{
-            flex: 2,
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "center",
             alignItems: "center"
           }}
         >
-          <Box
-            sx={{
-              borderRadius: "1rem",
-              overflow: "hidden",
-              maxWidth: "80%"
-            }}
-          >
+          <Box sx={{ borderRadius: "1rem", overflow: "hidden" }}>
             <img
               src="http://www.jonesday.com/-/media/images/news/2021/07/spoofing_and_disruptive_trading_social.jpg"
               alt="Stock Graph"
               style={{
                 width: "900px",
                 height: "600px",
+                maxWidth: "100%",
                 objectFit: "cover",
                 borderRadius: "1rem"
               }}
@@ -253,40 +247,31 @@ const Register = () => {
           </Box>
         </Box>
 
-        {/* Right: Signup Form */}
+        {/* Right Side: Signup Form */}
         <Box
           sx={{
-            flex: 1,
+            backgroundColor: theme.palette.background.alt,
+            borderRadius: "1rem",
+            padding: "2rem",
+            width: "350px",
             display: "flex",
             flexDirection: "column",
-            borderRadius: "1rem",
-            backgroundColor: theme.palette.background.alt,
-            padding: "2rem",
-            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-            maxWidth: "350px",
-            width: "100%"
+            alignItems: "center",
+            boxShadow: "0 0 10px rgba(0,0,0,0.1)"
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              marginBottom: "1rem"
-            }}
-          >
-            <Avatar sx={{ bgcolor: 'secondary.main', mb: 1 }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5" color="#000">
-              Sign Up
-            </Typography>
-          </Box>
+          <Avatar sx={{ bgcolor: 'secondary.main', mb: 1 }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5" sx={{ mb: 2, color: "#000" }}>
+            Sign Up
+          </Typography>
 
           <Box
             component="form"
             onSubmit={handleSubmit}
             sx={{
+              width: "100%",
               display: "flex",
               flexDirection: "column",
               gap: "1rem"
@@ -302,6 +287,14 @@ const Register = () => {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               autoFocus
+              InputProps={{
+                style: {
+                  backgroundColor: "#D1C7FA"
+                }
+              }}
+              InputLabelProps={{
+                style: { color: "#000" }
+              }}
             />
 
             <TextField
@@ -312,6 +305,14 @@ const Register = () => {
               name="lastName"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              InputProps={{
+                style: {
+                  backgroundColor: "#D1C7FA"
+                }
+              }}
+              InputLabelProps={{
+                style: { color: "#000" }
+              }}
             />
 
             <TextField
@@ -323,6 +324,14 @@ const Register = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
+              InputProps={{
+                style: {
+                  backgroundColor: "#D1C7FA"
+                }
+              }}
+              InputLabelProps={{
+                style: { color: "#000" }
+              }}
             />
 
             <TextField
@@ -335,6 +344,14 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
+              InputProps={{
+                style: {
+                  backgroundColor: "#D1C7FA"
+                }
+              }}
+              InputLabelProps={{
+                style: { color: "#000" }
+              }}
             />
 
             <Button
@@ -342,7 +359,7 @@ const Register = () => {
               disabled={isLoading}
               fullWidth
               variant="contained"
-              sx={{ backgroundColor: "#000", color: "#fff" }}
+              sx={{ mt: 1, backgroundColor: "#000", color: "#fff", "&:hover": { backgroundColor: "#333" } }}
             >
               Sign Up
             </Button>
@@ -351,7 +368,7 @@ const Register = () => {
 
             <Typography
               variant="body2"
-              sx={{ textAlign: "center", textDecoration: "underline", cursor: "pointer", color: "#000" }}
+              sx={{ mt: 2, textAlign: "center", textDecoration: "underline", cursor: "pointer", color: "#000" }}
               onClick={() => navigate('../login')}
             >
               Already have an account? Log In
