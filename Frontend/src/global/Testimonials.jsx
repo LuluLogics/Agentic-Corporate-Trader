@@ -6,6 +6,7 @@ import "./Testimonials.scss"
 
 import clientImage from './robb.png'; // Import the image file
 import clientImages from './izzy.png'; // Import the image file
+import clientImagess from './nora.png'; // Import the image file
 
 
 export default class Testimonials extends Component {
@@ -35,9 +36,9 @@ export default class Testimonials extends Component {
         </div>
 
         <div>
-          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--nSI8V6RE--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/81co8nilff5r9eer3xga.png" />
+          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" />
           <div className="myCarousel">
-            <h3>Nikhil Bindal</h3>
+            <h3>Samuel Williams</h3>
             <h4>Designer</h4>
             <p>
             SPM.in was the platform where I first got onboard to MF and I would 
@@ -62,7 +63,7 @@ export default class Testimonials extends Component {
         </div>
 
         <div>
-          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" />
+          <img style={{width:100}} src={clientImagess} />
           <div className="myCarousel">
             <h3>Nora Fernandez</h3>
             <h4>Senior Product Specialist at Adobe</h4>
