@@ -25,7 +25,7 @@ export default class Testimonials extends Component {
         <div>
           <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--0SCWkYwS--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/9dhr4cw2s0skgfig8qnw.png" />
           <div className="myCarousel">
-            <h3>Sneha Giranje</h3>
+            <h3>Natasha Smith</h3>
             <h4>Product Manager at Ittiam</h4>
             <p>
             SPM is a great platform for investment. Interactive and clean User Interface.
