@@ -4,6 +4,10 @@ import { Carousel } from 'react-responsive-carousel';
 import Header from "../components/Header";
 import "./Testimonials.scss"
 
+import clientImage from './robb.png'; // Import the image file
+import clientImages from './izzy.png'; // Import the image file
+
+
 export default class Testimonials extends Component {
   render() {
     return (
@@ -44,7 +48,8 @@ export default class Testimonials extends Component {
         </div>
 
         <div>
-          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" />
+          {/* <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" /> */}
+          <img style={{width:100}} src={clientImages} />
           <div className="myCarousel">
             <h3>Izzy Abbas</h3>
             <h4>AI specilist at Laya Healthcare</h4>
@@ -70,7 +75,8 @@ export default class Testimonials extends Component {
         </div>
 
         <div>
-          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" />
+          {/* <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" /> */}
+          <img style={{width:100}} src={clientImage} />
           <div className="myCarousel">
             <h3>Robbert van Vliet</h3>
             <h4>Technical Manager at Salesforce</h4>
