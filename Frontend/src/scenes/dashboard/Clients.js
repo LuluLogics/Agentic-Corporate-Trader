@@ -13,6 +13,7 @@ import Modal from "@mui/material/Modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Copyright from "../../global/Copyright";
+import clientImage from './client.png'; // Import the image file
 
 const Clients = () => {
   const [clients, setClients] = useState([]);
@@ -111,7 +112,7 @@ const Clients = () => {
               </Typography>
               <img
                 className="client-image"
-                src="client.png"
+                src={clientImage}
                 alt="Client"
               />
             </div>
@@ -146,8 +147,8 @@ const Clients = () => {
 
       <Copyright sx={{
           position:"absolute",
-          mt:"50%", 
-          ml:"35%", 
+          mt:"45%", 
+          ml:"40%", 
           color:"white"}}/>
 
     </Box>
