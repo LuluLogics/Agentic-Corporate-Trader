@@ -90,14 +90,6 @@ const Clients = () => {
 
       <Typography
         sx={{
-          // marginTop: "1%",
-          // paddingTop: "8%",
-          // paddingBottom: "2%",
-          // marginLeft: "5%", //was 10%
-          // fontSize: 50,
-          // color: "white",
-          // textAlign: "center",
-
           width: "100%",
           fontSize: 50,
           color: "white",
@@ -121,7 +113,7 @@ const Clients = () => {
                 className="client-image"
                 src={clientImage}
                 alt="Client"
-                style={{ height: "100px", width: "250px" }}
+                style={{ height: "200px", width: "250px" }}
               />
             </div>
           </Grid>
@@ -152,11 +144,10 @@ const Clients = () => {
       </Modal>
 
       <Copyright sx={{
-
         position: "absolute",
-        bottom: "10px",    // Position a small distance from the bottom
-        left: "50%",       // Start from the middle of the page
-        transform: "translateX(-50%)",  // Shift it back left by 50% of its own width to center
+        bottom: "10px", 
+        left: "50%", 
+        transform: "translateX(-50%)", 
         color: "white"
       }}
       />
