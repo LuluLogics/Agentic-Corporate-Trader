@@ -61,11 +61,10 @@ const Clients = () => {
   };
 
   return (
-    // <Box sx={{ width: "100%", flexGrow: 1, backgroundColor: "#141b2d" }}>
     <Box 
       sx={{ 
         width: "100%", 
-        minHeight: "100vh", // Ensures full viewport coverage
+        minHeight: "100vh",
         display: "flex", 
         flexDirection: "column",
         backgroundColor: "#141b2d" 
@@ -91,13 +90,21 @@ const Clients = () => {
 
       <Typography
         sx={{
-          marginTop: "1%",
-          paddingTop: "8%",
-          paddingBottom: "2%",
-          marginLeft: "9%", //was 10%
+          // marginTop: "1%",
+          // paddingTop: "8%",
+          // paddingBottom: "2%",
+          // marginLeft: "5%", //was 10%
+          // fontSize: 50,
+          // color: "white",
+          // textAlign: "center",
+
+          width: "100%",
           fontSize: 50,
           color: "white",
           textAlign: "center",
+          mt: "1%",
+          pt: "8%",
+          pb: "2%"
         }}
       >
         Your Clients
@@ -114,6 +121,7 @@ const Clients = () => {
                 className="client-image"
                 src={clientImage}
                 alt="Client"
+                style={{ height: "100px", width: "250px" }}
               />
             </div>
           </Grid>
@@ -143,13 +151,15 @@ const Clients = () => {
         </Box>
       </Modal>
 
-      {/* <Copyright sx={{ marginTop: "5%", textAlign: "center", color: "white" }} /> */}
-
       <Copyright sx={{
-          position:"absolute",
-          mt:"45%", 
-          ml:"40%", 
-          color:"white"}}/>
+
+        position: "absolute",
+        bottom: "10px",    // Position a small distance from the bottom
+        left: "50%",       // Start from the middle of the page
+        transform: "translateX(-50%)",  // Shift it back left by 50% of its own width to center
+        color: "white"
+      }}
+      />
 
     </Box>
   );
