@@ -111,7 +111,7 @@ const Clients = () => {
               </Typography>
               <img
                 className="client-image"
-                src="https://via.placeholder.com/250x180"
+                src="client.png"
                 alt="Client"
               />
             </div>
@@ -146,8 +146,8 @@ const Clients = () => {
 
       <Copyright sx={{
           position:"absolute",
-          mt:"55%", 
-          ml:"30%", 
+          mt:"50%", 
+          ml:"35%", 
           color:"white"}}/>
 
     </Box>
