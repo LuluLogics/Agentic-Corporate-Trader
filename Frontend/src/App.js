@@ -47,7 +47,7 @@ function App() {
                   <Topbar />
                   <Dashboard />
                 </main>
-                <Copyright />
+                {/* <Copyright /> */}
               </div>
             }
           />
