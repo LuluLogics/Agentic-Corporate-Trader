@@ -113,7 +113,7 @@ const Clients = () => {
                 className="client-image"
                 src={clientImage}
                 alt="Client"
-                style={{ height: "200px", width: "230px" }}
+                style={{ height: "230px", width: "200px" }}
               />
             </div>
           </Grid>
