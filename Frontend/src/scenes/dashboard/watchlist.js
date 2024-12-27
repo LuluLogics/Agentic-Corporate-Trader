@@ -360,17 +360,21 @@ const Watchlist = () => {
       <Dialog open={openAlertsDialog} onClose={handleAlertsDialogClose}>
         <DialogTitle>Your Price Alerts</DialogTitle>
         <DialogContent>
-          {alerts.map((alert) => (
-            <Box key={alert.id} display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-              <Typography>
-                {alert.stockSymbol} - {alert.condition} {alert.targetPrice}
-              </Typography>
-              <DeleteIcon
-                onClick={() => deletePriceAlert(alert.id)}
-                style={{ cursor: "pointer", color: "red" }}
-              />
-            </Box>
-          ))}
+          {alerts.length > 0 ? (
+            alerts.map((alert) => (
+              <Box key={alert.id} display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography>
+                  {alert.stockSymbol} - {alert.condition} {alert.targetPrice}
+                </Typography>
+                <DeleteIcon
+                  onClick={() => deletePriceAlert(alert.id)}
+                  style={{ cursor: "pointer", color: "red" }}
+                />
+              </Box>
+            ))
+          ) : (
+            <Typography>No price alerts found.</Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAlertsDialogClose} color="primary">
