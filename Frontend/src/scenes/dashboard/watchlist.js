@@ -181,26 +181,26 @@ const Watchlist = () => {
 const fetchPriceAlerts = async () => {
   try {
     const response = await axios.get(
-      `https://your-api-url/users/${userId}/PriceAlerts`
+      `https://act-production-5e24.up.railway.app/api/alerts/${userId}`
     );
-    setAlerts(response.data);
+    setAlerts(response.data); // Assuming the API response contains an array of alerts
     setOpenAlertsDialog(true);
   } catch (error) {
     console.error("Error fetching price alerts:", error.response?.data || error.message);
   }
 };
 
-
 const deletePriceAlert = async (alertId) => {
   try {
-    await axios.delete(
-      `https://your-api-url/users/${userId}/PriceAlerts/${alertId}`
-    );
+    await axios.delete(`https://act-production-5e24.up.railway.app/api/alerts/remove`, {
+      data: { userId, alertId }, // Sending `userId` and `alertId` in the request body
+    });
     setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== alertId));
   } catch (error) {
     console.error("Error deleting price alert:", error.response?.data || error.message);
   }
 };
+
 
 
   const handleAlertsDialogClose = () => {
