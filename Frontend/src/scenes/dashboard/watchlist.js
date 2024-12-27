@@ -22,6 +22,8 @@ const Watchlist = () => {
 
   const [openAlertsDialog, setOpenAlertsDialog] = useState(false); // State to handle alerts dialog
   const [alerts, setAlerts] = useState([]); // Store price alerts
+  const [loading, setLoading] = useState(false); // New state for loading
+
 
   const history = useNavigate();
   const theme = useTheme();
@@ -179,16 +181,21 @@ const Watchlist = () => {
 };
 
 const fetchPriceAlerts = async () => {
+  setLoading(true); // Start loading
   try {
-    const response = await axios.get(
-      `https://act-production-5e24.up.railway.app/api/alerts/${userId}`
-    );
-    setAlerts(response.data); // Assuming the API response contains an array of alerts
-    setOpenAlertsDialog(true);
+      const response = await axios.get(
+          `https://act-production-5e24.up.railway.app/api/alerts/${userId}`
+      );
+      console.log("Fetched alerts from backend:", response.data.alerts); // Debugging response
+      setAlerts(response.data.alerts); // Ensure this sets the alerts array properly
+      setOpenAlertsDialog(true); // Open dialog only after alerts are fetched
   } catch (error) {
-    console.error("Error fetching price alerts:", error.response?.data || error.message);
+      console.error("Error fetching price alerts:", error.response?.data || error.message);
+  } finally {
+      setLoading(false); // Stop loading
   }
 };
+
 
 const deletePriceAlert = async (alertId) => {
   try {
@@ -360,7 +367,9 @@ const deletePriceAlert = async (alertId) => {
       <Dialog open={openAlertsDialog} onClose={handleAlertsDialogClose}>
           <DialogTitle>Your Price Alerts</DialogTitle>
           <DialogContent>
-              {alerts.length > 0 ? (
+              {loading ? ( // Show a loading message if fetching data
+                  <Typography>Loading price alerts...</Typography>
+              ) : alerts.length > 0 ? (
                   alerts.map((alert) => (
                       <Box key={alert.id} display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                           <Typography>
@@ -382,6 +391,7 @@ const deletePriceAlert = async (alertId) => {
               </Button>
           </DialogActions>
       </Dialog>
+
 
     </Box>
   );
