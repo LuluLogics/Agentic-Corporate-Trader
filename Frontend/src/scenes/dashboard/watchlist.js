@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { useTheme } from "@mui/material";
@@ -15,9 +15,54 @@ const Watchlist = () => {
 
   const [rows, setRows] = useState([]); // Watchlisted stocks
   const [isLoading, setIsLoading] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false); // State to handle dialog
+  const [ticker, setTicker] = useState("");
+  const [currentPrice, setCurrentPrice] = useState("");
+  const [alertPrice, setAlertPrice] = useState("");
+
   const history = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const handleDialogOpen = () => setOpenDialog(true);
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setTicker("");
+    setCurrentPrice("");
+    setAlertPrice("");
+  };
+
+  const handlePriceAlertSubmit = async () => {
+    if (!ticker || !alertPrice) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+
+    try {
+      const user = JSON.parse(localStorage.getItem("user")) || null;
+      const selectedClient = JSON.parse(localStorage.getItem("selectedClient")) || null;
+
+      const userId = user?.id;
+      const clientId = selectedClient?.id || selectedClient;
+
+      if (!userId || !clientId) {
+        alert("User ID or Client ID is missing. Please log in again.");
+        return;
+      }
+
+      await axios.post("https://act-production-5e24.up.railway.app/api/alerts/add", {
+        userId,
+        stockSymbol: ticker,
+        targetPrice: parseFloat(alertPrice),
+        condition: parseFloat(alertPrice) > parseFloat(currentPrice) ? "above" : "below",
+      });
+
+      alert("Price alert added successfully.");
+      handleDialogClose();
+    } catch (error) {
+      console.error("Error adding price alert:", error.response?.data || error.message);
+    }
+  };
 
   // Fetch watchlisted stocks for the current user
   const fetchWatchlist = async () => {
@@ -191,9 +236,9 @@ const Watchlist = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => history("/priceAlerts")}
+          onClick={handleDialogOpen}
         >
-          Manage Price Alerts
+          Add Price Alert
         </Button>
       </Box>
       <Box
@@ -215,6 +260,45 @@ const Watchlist = () => {
           loading={isLoading}
         />
       </Box>
+
+      {/* Dialog for Adding Price Alert */}
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+        <DialogTitle>Add Price Alert</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Stock Ticker"
+            type="text"
+            fullWidth
+            value={ticker}
+            onChange={(e) => setTicker(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Current Price"
+            type="number"
+            fullWidth
+            value={currentPrice}
+            onChange={(e) => setCurrentPrice(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Alert Price"
+            type="number"
+            fullWidth
+            value={alertPrice}
+            onChange={(e) => setAlertPrice(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handlePriceAlertSubmit} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
