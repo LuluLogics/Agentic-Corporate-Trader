@@ -365,32 +365,54 @@ const deletePriceAlert = async (alertId) => {
       </Dialog>
 
       <Dialog open={openAlertsDialog} onClose={handleAlertsDialogClose}>
-          <DialogTitle>Your Price Alerts</DialogTitle>
-          <DialogContent>
-              {loading ? ( // Show a loading message if fetching data
-                  <Typography>Loading price alerts...</Typography>
-              ) : alerts.length > 0 ? (
-                  alerts.map((alert) => (
-                      <Box key={alert.id} display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                          <Typography>
-                              {alert.stockSymbol} - {alert.condition} {alert.targetPrice}
-                          </Typography>
-                          <DeleteIcon
-                              onClick={() => deletePriceAlert(alert.id)}
-                              style={{ cursor: "pointer", color: "red" }}
-                          />
-                      </Box>
-                  ))
-              ) : (
-                  <Typography>No price alerts found.</Typography>
-              )}
-          </DialogContent>
-          <DialogActions>
-              <Button onClick={handleAlertsDialogClose} color="primary">
-                  Close
-              </Button>
-          </DialogActions>
-      </Dialog>
+        <DialogTitle>Your Price Alerts</DialogTitle>
+        <DialogContent>
+            {loading ? ( // Show a loading message if fetching data
+                <Typography>Loading price alerts...</Typography>
+            ) : alerts.length > 0 ? (
+                alerts.map((alert) => (
+                    <Box
+                        key={alert.id}
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mb={2}
+                        p={2}
+                        sx={{
+                            border: "1px solid #ddd",
+                            borderRadius: "8px",
+                            backgroundColor: "#f9f9f9",
+                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                        }}
+                    >
+                        <Box>
+                            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                                {alert.stockSymbol}
+                            </Typography>
+                            <Typography variant="body1" sx={{ color: "#666" }}>
+                                Condition: {alert.condition}
+                            </Typography>
+                            <Typography variant="body1" sx={{ color: "#666" }}>
+                                Target Price: ${alert.targetPrice}
+                            </Typography>
+                        </Box>
+                        <DeleteIcon
+                            onClick={() => deletePriceAlert(alert.id)}
+                            style={{ cursor: "pointer", color: "red" }}
+                        />
+                    </Box>
+                ))
+            ) : (
+                <Typography>No price alerts found.</Typography>
+            )}
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={handleAlertsDialogClose} variant="contained" color="primary">
+                Close
+            </Button>
+        </DialogActions>
+    </Dialog>
+
 
 
     </Box>
