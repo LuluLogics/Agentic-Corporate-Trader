@@ -16,7 +16,7 @@ const Watchlist = () => {
   const [rows, setRows] = useState([]); // Watchlisted stocks
   const [isLoading, setIsLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false); // State to handle dialog
-  const [viewAlertsDialog, setViewAlertsDialog] = useState(false); // State to handle view alerts dialog
+  const [viewAlertsDialog, setViewAlertsDialog] = useState(false); // State for view alerts dialog
   const [ticker, setTicker] = useState("");
   const [currentPrice, setCurrentPrice] = useState("");
   const [alertPrice, setAlertPrice] = useState("");
@@ -77,35 +77,6 @@ const Watchlist = () => {
     }
   };
 
-  const fetchPriceAlerts = async () => {
-    try {
-      const response = await axios.get(`https://act-production-5e24.up.railway.app/api/alerts/${userId}`);
-      setPriceAlerts(response.data);
-    } catch (error) {
-      console.error("Error fetching price alerts:", error.response?.data || error.message);
-    }
-  };
-
-  const handleViewAlerts = async () => {
-    await fetchPriceAlerts();
-    setViewAlertsDialog(true);
-  };
-
-  const handleDeleteAlert = async (alertId) => {
-    try {
-      await axios.delete(`https://act-production-5e24.up.railway.app/api/alerts/delete/${alertId}`);
-      setPriceAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== alertId));
-      alert("Price alert deleted successfully.");
-    } catch (error) {
-      console.error("Error deleting price alert:", error.response?.data || error.message);
-    }
-  };
-
-  const handleViewAlertsClose = () => {
-    setViewAlertsDialog(false);
-  };
-
-  // Fetch watchlisted stocks for the current user
   const fetchWatchlist = async () => {
     const user = JSON.parse(localStorage.getItem("user")) || null;
     const selectedClient = JSON.parse(localStorage.getItem("selectedClient")) || null;
@@ -125,22 +96,62 @@ const Watchlist = () => {
       );
       const transformedData = await Promise.all(
         response.data.map(async (stock, index) => {
-          const stockUrl = `https://finnhub.io/api/v1/quote?symbol=${stock.ticker}&token=ce80b8aad3i4pjr4v2ggce80b8aad3i4pjr4v2h0`;
-          const stockResponse = await axios.get(stockUrl);
-          return {
-            id: index,
-            name: stock.ticker,
-            symbol: stock.ticker,
-            today: stockResponse.data.c || "N/A",
-            Percent: stockResponse.data.dp ? `${stockResponse.data.dp}%` : "N/A",
-          };
+          try {
+            const stockUrl = `https://finnhub.io/api/v1/quote?symbol=${stock.ticker}&token=ce80b8aad3i4pjr4v2ggce80b8aad3i4pjr4v2h0`;
+            const stockResponse = await axios.get(stockUrl);
+            const stockData = stockResponse.data;
+
+            return {
+              id: index,
+              name: stock.ticker,
+              symbol: stock.ticker,
+              today: stockData.c || "N/A",
+            };
+          } catch (error) {
+            console.error(`Error fetching stock data for ${stock.ticker}:`, error.message);
+            return {
+              id: index,
+              name: stock.ticker,
+              symbol: stock.ticker,
+              today: "N/A",
+            };
+          }
         })
       );
+
       setRows(transformedData);
     } catch (error) {
-      console.error("Error fetching watchlist:", error.response?.data || error.message);
+      console.error("Error fetching watchlist:", error.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchPriceAlerts = async () => {
+    try {
+      const response = await axios.get(`https://act-production-5e24.up.railway.app/api/alerts/${userId}`);
+      setPriceAlerts(response.data);
+    } catch (error) {
+      console.error("Error fetching price alerts:", error.message);
+    }
+  };
+
+  const handleViewAlerts = async () => {
+    await fetchPriceAlerts();
+    setViewAlertsDialog(true);
+  };
+
+  const handleViewAlertsClose = () => {
+    setViewAlertsDialog(false);
+  };
+
+  const handleDeleteAlert = async (alertId) => {
+    try {
+      await axios.delete(`https://act-production-5e24.up.railway.app/api/alerts/delete/${alertId}`);
+      setPriceAlerts((prev) => prev.filter((alert) => alert.id !== alertId));
+      alert("Price alert deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting price alert:", error.message);
     }
   };
 
@@ -151,8 +162,7 @@ const Watchlist = () => {
   const columns = [
     { field: "name", headerName: "Company Name", flex: 1 },
     { field: "symbol", headerName: "Symbol", flex: 0.5 },
-    { field: "today", headerName: "Current Price", flex: 0.5 },
-    { field: "Percent", headerName: "Percent Change", flex: 0.5 },
+    { field: "today", headerName: "Current Price", flex: 0.5, type: "number" },
     {
       field: "Add Alert",
       headerName: "Price Alert",
@@ -173,42 +183,31 @@ const Watchlist = () => {
     <Box m="20px">
       <Header title="Watchlist" subtitle="Your Watchlisted Stocks" />
       <Box display="flex" justifyContent="space-between" mb={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleViewAlerts}
-        >
+        <Button variant="contained" color="primary" onClick={handleViewAlerts}>
           View All Price Alerts
         </Button>
       </Box>
-      <Box height="75vh">
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
-          loading={isLoading}
-        />
+      <Box
+        m="40px 0 0 0"
+        height="75vh"
+        sx={{
+          "& .MuiDataGrid-root": { border: "none" },
+          "& .MuiDataGrid-cell": { borderBottom: "none" },
+          "& .MuiDataGrid-columnHeaders": { backgroundColor: colors.blueAccent[700], borderBottom: "none" },
+          "& .MuiDataGrid-virtualScroller": { backgroundColor: colors.primary[400] },
+          "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: colors.blueAccent[700] },
+          "& .MuiCheckbox-root": { color: `${colors.greenAccent[200]} !important` },
+        }}
+      >
+        <DataGrid rows={rows} columns={columns} components={{ Toolbar: GridToolbar }} loading={isLoading} />
       </Box>
 
+      {/* Dialog for Adding Price Alert */}
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>Add Price Alert</DialogTitle>
         <DialogContent>
-          <TextField
-            margin="dense"
-            label="Stock Ticker"
-            type="text"
-            fullWidth
-            value={ticker}
-            disabled
-          />
-          <TextField
-            margin="dense"
-            label="Current Price"
-            type="number"
-            fullWidth
-            value={currentPrice}
-            disabled
-          />
+          <TextField margin="dense" label="Stock Ticker" type="text" fullWidth value={ticker} disabled />
+          <TextField margin="dense" label="Current Price" type="number" fullWidth value={currentPrice} disabled />
           <TextField
             margin="dense"
             label="Alert Price"
@@ -228,23 +227,16 @@ const Watchlist = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={viewAlertsDialog} onClose={handleViewAlertsClose} maxWidth="sm" fullWidth>
+      {/* Dialog for Viewing All Price Alerts */}
+      <Dialog open={viewAlertsDialog} onClose={handleViewAlertsClose}>
         <DialogTitle>All Price Alerts</DialogTitle>
         <DialogContent>
           {priceAlerts.map((alert) => (
-            <Box
-              key={alert.id}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mb={2}
-            >
-              <Typography>{`${alert.stockSymbol} - Alert at ${alert.targetPrice} (${alert.condition})`}</Typography>
-              <Button
-                onClick={() => handleDeleteAlert(alert.id)}
-                variant="outlined"
-                color="error"
-              >
+            <Box key={alert.id} display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+              <Typography>{`${alert.stockSymbol} - ${
+                alert.condition === "above" ? "Above" : "Below"
+              } ${alert.targetPrice}`}</Typography>
+              <Button onClick={() => handleDeleteAlert(alert.id)} variant="outlined" color="error">
                 Delete
               </Button>
             </Box>
