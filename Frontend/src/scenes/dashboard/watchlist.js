@@ -24,7 +24,18 @@ const Watchlist = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const handleDialogOpen = () => setOpenDialog(true);
+  const handleDialogOpen = async (stockTicker) => {
+    try {
+      const stockUrl = `https://finnhub.io/api/v1/quote?symbol=${stockTicker}&token=ce80b8aad3i4pjr4v2ggce80b8aad3i4pjr4v2h0`;
+      const response = await axios.get(stockUrl);
+      setTicker(stockTicker);
+      setCurrentPrice(response.data.c || "N/A");
+      setOpenDialog(true);
+    } catch (error) {
+      console.error("Error fetching stock price:", error.response?.data || error.message);
+    }
+  };
+
   const handleDialogClose = () => {
     setOpenDialog(false);
     setTicker("");
@@ -178,6 +189,20 @@ const Watchlist = () => {
     { field: "low", headerName: "Low", flex: 0.3, type: "number" },
     { field: "close", headerName: "Close", flex: 0.3, type: "number" },
     {
+      field: "Add Alert",
+      headerName: "Price Alert",
+      sortable: false,
+      renderCell: (params) => (
+        <Button
+          onClick={() => handleDialogOpen(params.row.symbol)}
+          variant="contained"
+          color="info"
+        >
+          Add Alert
+        </Button>
+      ),
+    },
+    {
       field: "Buy",
       headerName: "Buy",
       sortable: false,
@@ -232,15 +257,6 @@ const Watchlist = () => {
   return (
     <Box m="20px">
       <Header title="Watchlist" subtitle="Your Watchlisted Stocks" />
-      <Box display="flex" justifyContent="flex-end" mb={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleDialogOpen}
-        >
-          Add Price Alert
-        </Button>
-      </Box>
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -271,7 +287,7 @@ const Watchlist = () => {
             type="text"
             fullWidth
             value={ticker}
-            onChange={(e) => setTicker(e.target.value)}
+            disabled
           />
           <TextField
             margin="dense"
@@ -279,7 +295,7 @@ const Watchlist = () => {
             type="number"
             fullWidth
             value={currentPrice}
-            onChange={(e) => setCurrentPrice(e.target.value)}
+            disabled
           />
           <TextField
             margin="dense"
