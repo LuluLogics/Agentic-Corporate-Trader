@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "@mui/material": "^6.1.8",
+    "@mui/x-data-grid": "^7.22.3",
+    "firebase": "^11.0.2",
     "react-ts-tradingview-widgets": "^1.2.5"
   }
 }

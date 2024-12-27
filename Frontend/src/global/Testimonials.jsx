@@ -4,6 +4,11 @@ import { Carousel } from 'react-responsive-carousel';
 import Header from "../components/Header";
 import "./Testimonials.scss"
 
+import clientImage from './robb.png'; // Import the image file
+import clientImages from './izzy.png'; // Import the image file
+import clientImagess from './nora.png'; // Import the image file
+
+
 export default class Testimonials extends Component {
   render() {
     return (
@@ -20,7 +25,7 @@ export default class Testimonials extends Component {
         <div>
           <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--0SCWkYwS--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/9dhr4cw2s0skgfig8qnw.png" />
           <div className="myCarousel">
-            <h3>Sneha Giranje</h3>
+            <h3>Natasha Smith</h3>
             <h4>Product Manager at Ittiam</h4>
             <p>
             SPM is a great platform for investment. Interactive and clean User Interface.
@@ -31,9 +36,9 @@ export default class Testimonials extends Component {
         </div>
 
         <div>
-          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--nSI8V6RE--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/81co8nilff5r9eer3xga.png" />
+          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" />
           <div className="myCarousel">
-            <h3>Nikhil Bindal</h3>
+            <h3>Samuel Williams</h3>
             <h4>Designer</h4>
             <p>
             SPM.in was the platform where I first got onboard to MF and I would 
@@ -44,10 +49,11 @@ export default class Testimonials extends Component {
         </div>
 
         <div>
-          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" />
+          {/* <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" /> */}
+          <img style={{width:100}} src={clientImages} />
           <div className="myCarousel">
-            <h3>Shardul Surve</h3>
-            <h4>Technical Product Specialist at Google</h4>
+            <h3>Izzy Abbas</h3>
+            <h4>AI specilist at Laya Healthcare</h4>
             <p>
             If you are one of those who would like to take control of how you save, use SPM. 
             It is ridiculously easy portal. It took me 5 mins to set 
@@ -57,9 +63,9 @@ export default class Testimonials extends Component {
         </div>
 
         <div>
-          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" />
+          <img style={{width:100}} src={clientImagess} />
           <div className="myCarousel">
-            <h3>Kalpesh Lambe</h3>
+            <h3>Nora Fernandez</h3>
             <h4>Senior Product Specialist at Adobe</h4>
             <p>
             If you are one of those who would like to take control of how you save, use SPM. 
@@ -70,9 +76,10 @@ export default class Testimonials extends Component {
         </div>
 
         <div>
-          <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" />
+          {/* <img style={{width:100}} src="https://res.cloudinary.com/practicaldev/image/fetch/s--gRFMHqWs--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/1xwiaya5i7wweic3pz96.png" /> */}
+          <img style={{width:100}} src={clientImage} />
           <div className="myCarousel">
-            <h3>Tridev Shashi Kashyap</h3>
+            <h3>Robbert van Vliet</h3>
             <h4>Technical Manager at Salesforce</h4>
             <p>
             If you are one of those who would like to take control of how you save, use SPM. 

@@ -13,6 +13,7 @@ import Modal from "@mui/material/Modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Copyright from "../../global/Copyright";
+import clientImage from './client.png'; // Import the image file
 
 const Clients = () => {
   const [clients, setClients] = useState([]);
@@ -60,7 +61,15 @@ const Clients = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", flexGrow: 1, backgroundColor: "#141b2d" }}>
+    <Box 
+      sx={{ 
+        width: "100%", 
+        minHeight: "100vh",
+        display: "flex", 
+        flexDirection: "column",
+        backgroundColor: "#141b2d" 
+      }}
+    >
       <AppBar position="static">
         <Toolbar>
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
@@ -81,13 +90,13 @@ const Clients = () => {
 
       <Typography
         sx={{
-          marginTop: "1%",
-          paddingTop: "8%",
-          paddingBottom: "2%",
-          marginLeft: "10%",
+          width: "100%",
           fontSize: 50,
           color: "white",
           textAlign: "center",
+          mt: "1%",
+          pt: "8%",
+          pb: "2%"
         }}
       >
         Your Clients
@@ -102,8 +111,9 @@ const Clients = () => {
               </Typography>
               <img
                 className="client-image"
-                src="https://via.placeholder.com/250x180"
+                src={clientImage}
                 alt="Client"
+                style={{ height: "200px", width: "230px" }}
               />
             </div>
           </Grid>
@@ -133,7 +143,15 @@ const Clients = () => {
         </Box>
       </Modal>
 
-      <Copyright sx={{ marginTop: "5%", textAlign: "center", color: "white" }} />
+      <Copyright sx={{
+        position: "absolute",
+        bottom: "10px", 
+        left: "50%", 
+        transform: "translateX(-50%)", 
+        color: "white"
+      }}
+      />
+
     </Box>
   );
 };
