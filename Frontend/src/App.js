@@ -14,7 +14,7 @@ import LandingPage from "./global/LandingPage";
 import Newz from "./scenes/dashboard/news";
 import IPO from "./scenes/dashboard/ipo";
 import Portfolio from "./scenes/dashboard/Portfolio";
-import Orders from "./scenes/dashboard/TradeHistory";
+import TradeHistory from "./scenes/dashboard/TradeHistory";
 import Testimonials from "./global/Testimonials";
 import Clients from "./scenes/dashboard/Clients"; // Import the Clients screen
 import Copyright from "./global/Copyright";
@@ -146,7 +146,7 @@ function App() {
                 <HamburgerMenu />
                 <main className="context">
                   <Topbar />
-                  <Orders userId={currentUserId} clientId={selectedClientId} />
+                  <TradeHistory userId={currentUserId} clientId={selectedClientId} />
                 </main>
               </div>
             }
