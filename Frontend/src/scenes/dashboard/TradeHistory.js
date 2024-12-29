@@ -99,11 +99,14 @@ const TradeHistory = () => {
                         : `$${row.totalEarnings.toFixed(2)}`}
                     </TableCell>
                     <TableCell>
-                      {new Date(row.date.seconds * 1000).toLocaleString()}
+                      {row.date && row.date.seconds
+                        ? new Date(row.date.seconds * 1000).toLocaleString()
+                        : "Invalid Date"}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
+
             </Table>
           </TableContainer>
           <TablePagination
