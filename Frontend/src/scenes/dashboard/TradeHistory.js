@@ -99,10 +99,11 @@ const TradeHistory = () => {
                         : `$${row.totalEarnings.toFixed(2)}`}
                     </TableCell>
                     <TableCell>
-                      {row.date && row.date.seconds
-                        ? new Date(row.date.seconds * 1000).toLocaleString()
+                      {row.date && row.date.toDate
+                        ? row.date.toDate().toLocaleString() // Convert Firestore Timestamp to JS Date
                         : "Invalid Date"}
                     </TableCell>
+
                   </TableRow>
                 ))}
               </TableBody>
