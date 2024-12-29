@@ -16,9 +16,32 @@ export default function Orders() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
 
+  // Debugging states
+  const [debugInfo, setDebugInfo] = useState({
+    userId: null,
+    clientId: null,
+    apiResponse: null,
+    error: null,
+  });
+
   // Fetch userId and clientId from localStorage
-  const userId = JSON.parse(localStorage.getItem('user'))?.id;
-  const clientId = JSON.parse(localStorage.getItem('selectedClient'))?.id;
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const client = JSON.parse(localStorage.getItem('selectedClient'));
+    if (!user || !user.id || !client || !client.id) {
+      console.error('Missing userId or clientId from localStorage');
+      setDebugInfo((prev) => ({
+        ...prev,
+        error: 'Missing userId or clientId from localStorage',
+      }));
+    } else {
+      setDebugInfo((prev) => ({
+        ...prev,
+        userId: user.id,
+        clientId: client.id,
+      }));
+    }
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -31,21 +54,34 @@ export default function Orders() {
 
   // Fetch orders from the API
   const fetchOrders = async () => {
+    const { userId, clientId } = debugInfo;
+
     if (!userId || !clientId) {
-      console.error('Missing userId or clientId');
+      console.error('Missing userId or clientId; aborting fetchOrders');
       setLoading(false);
       return;
     }
+
+    console.log('Calling API with:', { userId, clientId });
 
     try {
       setLoading(true);
       const response = await axios.get(
         `https://act-production-5e24.up.railway.app/api/orders/${userId}/${clientId}`
       );
-      console.log('Fetched orders:', response.data.orders);
+      console.log('API Response:', response.data);
+
       setRows(response.data.orders || []);
+      setDebugInfo((prev) => ({
+        ...prev,
+        apiResponse: response.data.orders,
+      }));
     } catch (error) {
       console.error('Error fetching orders:', error);
+      setDebugInfo((prev) => ({
+        ...prev,
+        error: error.message,
+      }));
       setRows([]);
     } finally {
       setLoading(false);
@@ -53,14 +89,22 @@ export default function Orders() {
   };
 
   useEffect(() => {
-    fetchOrders(); // Automatically fetch orders on component load
-  }, []); // No dependency array needed
+    if (debugInfo.userId && debugInfo.clientId) {
+      fetchOrders();
+    }
+  }, [debugInfo.userId, debugInfo.clientId]);
 
   return (
     <React.Fragment>
       <Title>Client Orders</Title>
+      <div>
+        <strong>Debug Info:</strong>
+        <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
+      </div>
       {loading ? (
         <p>Loading orders...</p>
+      ) : rows.length === 0 ? (
+        <p>No orders found for this client.</p>
       ) : (
         <>
           <Table size="medium">
