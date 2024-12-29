@@ -10,11 +10,15 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import Title from './Title';
 
-export default function Orders({ userId, clientId }) {
+export default function Orders() {
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
+
+  // Fetch userId and clientId from localStorage
+  const userId = JSON.parse(localStorage.getItem('user'))?.id;
+  const clientId = JSON.parse(localStorage.getItem('selectedClient'))?.id;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -25,14 +29,21 @@ export default function Orders({ userId, clientId }) {
     setPage(0);
   };
 
-  // Fetch orders from the new API
+  // Fetch orders from the API
   const fetchOrders = async () => {
+    if (!userId || !clientId) {
+      console.error('Missing userId or clientId');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const response = await axios.get(
         `https://act-production-5e24.up.railway.app/api/orders/${userId}/${clientId}`
       );
-      setRows(response.data.orders);
+      console.log('Fetched orders:', response.data.orders);
+      setRows(response.data.orders || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
       setRows([]);
@@ -42,12 +53,8 @@ export default function Orders({ userId, clientId }) {
   };
 
   useEffect(() => {
-    console.log("userId:", userId, "clientId:", clientId);
-    if (userId && clientId) {
-      fetchOrders();
-    }
-  }, [userId, clientId]);
-  
+    fetchOrders(); // Automatically fetch orders on component load
+  }, []); // No dependency array needed
 
   return (
     <React.Fragment>
