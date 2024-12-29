@@ -8,6 +8,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import CircularProgress from "@mui/material";
 
 const Watchlist = () => {
   const storedData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -23,6 +24,12 @@ const Watchlist = () => {
   const [openAlertsDialog, setOpenAlertsDialog] = useState(false); // State to handle alerts dialog
   const [alerts, setAlerts] = useState([]); // Store price alerts
   const [loading, setLoading] = useState(false); // New state for loading
+
+  const [openAIRecDialog, setOpenAIRecDialog] = useState(false);
+  const [aiRecResponse, setAIRecResponse] = useState("");
+  const [loadingAIRec, setLoadingAIRec] = useState(false); // Loading state for AI response
+  const [aiRecStock, setAIRecStock] = useState(""); // To keep track of which stock is being queried
+
 
 
   const history = useNavigate();
@@ -79,6 +86,32 @@ const Watchlist = () => {
       console.error("Error adding price alert:", error.response?.data || error.message);
     }
   };
+
+  const handleAIRecDialogOpen = async (stockTicker) => {
+    setOpenAIRecDialog(true);
+    setAIRecResponse(""); // Clear any previous response
+    setLoadingAIRec(true); // Show loading symbol
+    setAIRecStock(stockTicker); // Set the stock being queried
+  
+    try {
+      const response = await axios.post("https://act-ai-production.up.railway.app/analyze", {
+        stockTicker,
+      });
+      setAIRecResponse(response.data?.recommendation || "No recommendation available.");
+    } catch (error) {
+      console.error("Error fetching AI recommendation:", error.response?.data || error.message);
+      setAIRecResponse("Failed to fetch AI recommendation.");
+    } finally {
+      setLoadingAIRec(false); // Stop loading
+    }
+  };
+  
+  const handleAIRecDialogClose = () => {
+    setOpenAIRecDialog(false);
+    setAIRecResponse("");
+    setAIRecStock("");
+  };
+  
 
   // Fetch watchlisted stocks for the current user
   const fetchWatchlist = async () => {
@@ -228,6 +261,20 @@ const deletePriceAlert = async (alertId) => {
     { field: "high", headerName: "High", flex: 0.3, type: "number" },
     { field: "low", headerName: "Low", flex: 0.3, type: "number" },
     { field: "close", headerName: "Close", flex: 0.3, type: "number" },
+    {
+      field: "AI Rec",
+      headerName: "AI Recommendation",
+      sortable: false,
+      renderCell: (params) => (
+        <Button
+          onClick={() => handleAIRecDialogOpen(params.row.symbol)}
+          variant="contained"
+          color="secondary"
+        >
+          AI Rec
+        </Button>
+      ),
+    },    
     {
       field: "Add Alert",
       headerName: "Price Alert",
@@ -412,6 +459,30 @@ const deletePriceAlert = async (alertId) => {
             </Button>
         </DialogActions>
     </Dialog>
+    <Dialog open={openAIRecDialog} onClose={handleAIRecDialogClose}>
+      <DialogTitle>AI Recommendation</DialogTitle>
+      <DialogContent>
+        {loadingAIRec ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Stock: {aiRecStock}
+            </Typography>
+            <Typography variant="body1">{aiRecResponse}</Typography>
+          </Box>
+        )}
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={handleAIRecDialogClose} variant="contained" color="primary">
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+
 
 
 
