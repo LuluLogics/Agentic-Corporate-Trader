@@ -92,19 +92,20 @@ const Watchlist = () => {
     setAIRecResponse(""); // Clear any previous response
     setLoadingAIRec(true); // Show loading symbol
     setAIRecStock(stockTicker); // Set the stock being queried
-  
+
     try {
-      const response = await axios.post("https://act-ai-production.up.railway.app/analyze", {
-        stock_ticker: stockTicker, // Correct the key to match the backend
-      });
-      setAIRecResponse(response.data?.recommendation || "No recommendation available.");
+        const payload = { stock_ticker: stockTicker };
+        console.log("Payload being sent:", payload); // Debug payload
+        const response = await axios.post("https://act-ai-production.up.railway.app/analyze", payload, {timeout: 120000});
+        setAIRecResponse(response.data?.recommendation || "No recommendation available.");
     } catch (error) {
-      console.error("Error fetching AI recommendation:", error.response?.data || error.message);
-      setAIRecResponse("Failed to fetch AI recommendation.");
+        console.error("Error fetching AI recommendation:", error.response?.data || error.message);
+        setAIRecResponse("Failed to fetch AI recommendation.");
     } finally {
-      setLoadingAIRec(false); // Stop loading
+        setLoadingAIRec(false); // Stop loading
     }
-  };
+};
+
   
   
   const handleAIRecDialogClose = () => {
