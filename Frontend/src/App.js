@@ -20,6 +20,10 @@ import Clients from "./scenes/dashboard/Clients"; // Import the Clients screen
 import Copyright from "./global/Copyright";
 import { useState } from "react";
 
+const currentUserId = JSON.parse(localStorage.getItem('user'))?.id;
+const selectedClientId = JSON.parse(localStorage.getItem('selectedClient'))?.id;
+
+
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -142,11 +146,12 @@ function App() {
                 <HamburgerMenu />
                 <main className="context">
                   <Topbar />
-                  <Orders />
+                  <Orders userId={currentUserId} clientId={selectedClientId} />
                 </main>
               </div>
             }
           />
+
           <Route
             path="/testimonials"
             element={

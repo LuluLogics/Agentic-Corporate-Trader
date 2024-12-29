@@ -42,10 +42,12 @@ export default function Orders({ userId, clientId }) {
   };
 
   useEffect(() => {
+    console.log("userId:", userId, "clientId:", clientId);
     if (userId && clientId) {
       fetchOrders();
     }
   }, [userId, clientId]);
+  
 
   return (
     <React.Fragment>
