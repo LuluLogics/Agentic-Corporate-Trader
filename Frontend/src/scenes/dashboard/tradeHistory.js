@@ -1,418 +1,104 @@
-// import { Box, Typography, useTheme, Button } from "@mui/material";
-// import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-// import { tokens } from "../../theme";
-// import Icon from "@mui/material/Icon";
-// import { mockDataTeam } from "../../data/mockData";
-// import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-// import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
-// import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import Header from "../../components/Headers";
-// // import { abc } from "../../mockData";
-// import { useEffect, useState, useCallback } from "react";
-// import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-// // import { useAuthContext } from "../../hooks/useAuthContext.jsx";
-// import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-// import { CleaningServices } from "@mui/icons-material";
-// import React from "react";
-// // import NewsCard from "../Cards/NewsCard";
-// import Grid from "@mui/material/Grid";
-// import Paper from "@mui/material/Paper";
-// import List from "@mui/material/List";
-// import ListItem from "@mui/material/ListItem";
-// import ListItemText from "@mui/material/ListItemText";
-// import Divider from "@mui/material/Divider";
-
-// const Portfolio = () => {
-//   // const { user } = useAuthContext();
-//   const user = JSON.parse(localStorage.getItem("user"));
-//   console.log(user);
-//   const history = useNavigate();
-//   //   const [abc, setAbc] = useState([]);
-//   const [rows, setRows] = useState([]);
-//   const [invAmt, setInvAmt] = useState(0);
-//   const [currAmt, setCurrAmt] = useState(0);
-//   const [tProfit, setTProfit] = useState(0);
-
-//   // const [rows: GridRowsProp, setRows] = React.useState([]);
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   const url = "http://localhost:8080/trade/".concat(user.id);
-//   // console.log(url);
-
-//   const fetchData = async () => {
-//     let abc = [];
-//     const temp = [];
-//     let totalAmount = 0;
-//     let totalProfit = 0;
-//     let totalCurrAmount = 0;
-
-//     await fetch(url)
-//       .then((response) => response.json())
-//       //   .then((response) => console.log(response));
-//       //   .then((res) => setAbc(res));
-//       .then((response) => {
-//         response.map((d) => abc.push(d));
-//       });
-//     console.log(abc);
-//     for (var key in abc) {
-//       //   if (!abc.hasOwnProperty(key)) continue;
-//       //   let newData = [];
-//       //   const url = "https://finnhub.io/api/v1/quote?symbol=".concat(
-//       //     abc[key].symbol,
-//       //     "&token=c94i99aad3if4j50rvn0"
-//       //   );
-//       //   await axios
-//       //     .get(url)
-//       //     .then((res) => {
-//       //       const pData = res.data;
-//       //       newData.push(pData);
-//       //     })
-//       //     .catch((err) => {
-//       //       console.log(err);
-//       //     });
-//       //   console.log(newData);
-
-//       const ab = {
-//         id: abc[key]._id,
-//         name: abc[key].name,
-//         type: abc[key].tradeType,
-//         date: abc[key].date,
-
-//         symbol: abc[key].symbol,
-//         //today: newData[0]["c"],
-//         buyPrice: abc[key].price,
-//         shares: abc[key].shares,
-//         //currAmount: abc[key].shares * newData[0]["c"],
-//         invAmount: abc[key].shares * abc[key].price,
-//         // profit:
-//         //   abc[key].shares * newData[0]["c"] - abc[key].shares * abc[key].price,
-//         // id: abc[key]._id,
-//         // name: abc[key].name,
-//         // symbol: abc[key].symbol,
-//         // delete: abc[key]._id,
-//         // ids: abc[key]._id,
-//         // today: newData[0]["c"],
-//         // Percent: newData[0]["dp"] + " %",
-//         // open: newData[0]["o"],
-//         // high: newData[0]["h"],
-//         // low: newData[0]["l"],
-//         // close: newData[0]["pc"],
-//       };
-
-//       totalAmount += ab.invAmount;
-//       totalProfit += ab.profit;
-//       totalCurrAmount += ab.currAmount;
-//       // console.log(pData[key].name)
-//       temp.push(ab);
-//     }
-
-//     // setInvAmt(totalAmount);
-//     // setTProfit(totalProfit);
-//     // setCurrAmt(totalCurrAmount);
-//     console.log(temp);
-
-//     setRows(temp);
-//     console.log(rows);
-//     // setIsLoading(false);
-//   };
-
-//   useEffect(() => {
-//     // abc = [];
-//     // temp = [];
-//     fetchData();
-//   }, []);
-
-//   // console.log(abc);
-
-//   const theme = useTheme();
-//   const colors = tokens(theme.palette.mode);
-//   const columns = [
-//     {
-//       field: "name",
-//       headerName: " Company Name",
-//       flex: 1,
-//       cellClassName: "name-column--cell",
-//     },
-//     {
-//       field: "symbol",
-//       headerName: "Symbol",
-//       flex: 0.5,
-//       cellClassName: "symbol-column--cell",
-//     },
-
-//     {
-//       field: "buyPrice",
-//       headerName: "Buy Price",
-//       flex: 0.5,
-//       type: "number",
-//       headerAlign: "left",
-//       align: "left",
-//     },
-//     {
-//       field: "shares",
-//       headerName: "Quantity",
-//       flex: 0.5,
-//       type: "number",
-//       headerAlign: "left",
-//       align: "left",
-//     },
-//     {
-//       field: "type",
-//       headerName: "Trade Type",
-//       flex: 0.5,
-//       type: "number",
-//       headerAlign: "left",
-//       align: "left",
-//     },
-//     {
-//       field: "invAmount",
-//       headerName: "Amount",
-//       flex: 0.5,
-//       type: "number",
-//       headerAlign: "left",
-//       align: "left",
-//     },
-//     {
-//       field: "date",
-//       headerName: "Transaction Date",
-//       flex: 1,
-//       cellClassName: "name-column--cell",
-//     },
-
-//     // {
-//     //   field: "Sell",
-//     //   headerName: "Sell",
-//     //   sortable: false,
-//     //   renderCell: (params) => {
-//     //     const Remove = (e) => {
-//     //       e.stopPropagation(); // don't select this row after clicking
-
-//     //       const api: GridApi = params.api;
-//     //       const thisRow: Record<string, GridCellValue> = {};
-
-//     //       api
-//     //         .getAllColumns()
-//     //         .filter((c) => c.field !== "__check__" && !!c)
-//     //         .forEach(
-//     //           (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-//     //         );
-
-//     //       // return alert(JSON.stringify(thisRow.name, null, 4));
-//     //       // return;
-//     //       console.log(thisRow);
-//     //       history("/sellStock", { state: thisRow });
-//     //     };
-
-//     //     return (
-//     //       <Button onClick={Remove} variant="outlined" color="error">
-//     //         Sell
-//     //       </Button>
-//     //     );
-//     //   },
-//     // },
-//   ];
-
-//   return (
-//     <>
-//       <Box m="20px">
-//         <Header title="Trade History" subtitle="Your Order History Deatils" />
-
-//         <Box
-//           m="40px 0 0 0"
-//           height="75vh"
-//           sx={{
-//             "& .MuiDataGrid-root": {
-//               border: "none",
-//             },
-//             "& .MuiDataGrid-cell": {
-//               borderBottom: "none",
-//             },
-//             "& .name-column--cell": {
-//               color: colors.greenAccent[300],
-//             },
-//             "& .MuiDataGrid-columnHeaders": {
-//               backgroundColor: colors.blueAccent[700],
-//               borderBottom: "none",
-//             },
-//             "& .MuiDataGrid-virtualScroller": {
-//               backgroundColor: colors.primary[400],
-//             },
-//             "& .MuiDataGrid-footerContainer": {
-//               borderTop: "none",
-//               backgroundColor: colors.blueAccent[700],
-//             },
-//             "& .MuiCheckbox-root": {
-//               color: `${colors.greenAccent[200]} !important`,
-//             },
-//           }}
-//         >
-//           {
-//             <DataGrid
-//               rows={rows}
-//               columns={columns}
-//               components={{ Toolbar: GridToolbar }}
-//             />
-//           }
-//         </Box>
-//       </Box>
-//     </>
-//   );
-// };
-
-// export default Portfolio;
-
-
-
-
-
-// firebase code
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
+import axios from "axios";
 import Header from "../../components/Headers";
-import { useEffect, useState } from "react";
-import { useTheme } from "@mui/material/styles";
-import { db } from "../../firebaseConfig";
-// import { db } from "../../../firebaseConfig";
-import { collection, query, where, getDocs } from "firebase/firestore";
 
-const Portfolio = () => {
-  const user = JSON.parse(localStorage.getItem("user")); // Retrieve user info
-  const [rows, setRows] = useState([]); // Rows for DataGrid
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+const TradeHistory = () => {
+  console.log("Rendering Orders component...");
 
-  // Function to fetch trade history
-  const fetchTradeHistory = async () => {
+  const user = JSON.parse(localStorage.getItem("user")); // Fetch user from localStorage
+  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Fetch client from localStorage
+
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch orders data
+  const fetchOrders = async () => {
+    console.log("Inside fetchOrders...");
+    if (!user || !selectedClient) {
+      console.error("User or client is missing.", { user, selectedClient });
+      setLoading(false);
+      return;
+    }
+
     try {
-      const tradeHistory = [];
-      const tradesRef = collection(db, "users", user.id, "transactions"); // Firestore path
-      const q = query(tradesRef);
+      console.log(`Calling API for user: ${user.id}, client: ${selectedClient.id}`);
+      const response = await axios.get(
+        `https://act-production-5e24.up.railway.app/api/orders/${user.id}/${selectedClient.id}`
+      );
 
-      // Fetch documents
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        tradeHistory.push({
-          id: doc.id,
-          name: data.name,
-          symbol: data.symbol,
-          type: data.type,
-          buyPrice: data.price,
-          shares: data.quantity,
-          invAmount: data.quantity * data.price, // Investment amount
-          date: new Date(data.date.seconds * 1000).toLocaleDateString(), // Convert Firestore timestamp
-        });
-      });
-
-      setRows(tradeHistory);
+      console.log("API response received:", response.data);
+      setRows(response.data.orders || []);
     } catch (error) {
-      console.error("Error fetching trade history:", error);
+      console.error("Error fetching orders:", error);
+      setRows([]);
+    } finally {
+      console.log("Fetch orders completed.");
+      setLoading(false);
     }
   };
 
-  // Fetch trade history on component mount
+  // Fetch orders on component mount
   useEffect(() => {
-    fetchTradeHistory();
+    console.log("useEffect triggered - Fetching orders...");
+    fetchOrders();
   }, []);
 
-  // DataGrid columns
+  // Define columns for DataGrid
   const columns = [
+    { field: "type", headerName: "Type", flex: 1 },
+    { field: "symbol", headerName: "Symbol", flex: 1 },
+    { field: "name", headerName: "Stock Name", flex: 1 },
+    { field: "quantity", headerName: "Quantity", flex: 0.5, type: "number" },
+    { field: "price", headerName: "Price", flex: 0.5, type: "number" },
     {
-      field: "name",
-      headerName: "Company Name",
-      flex: 1,
-      cellClassName: "name-column--cell",
-    },
-    {
-      field: "symbol",
-      headerName: "Symbol",
-      flex: 0.5,
-      cellClassName: "symbol-column--cell",
-    },
-    {
-      field: "buyPrice",
-      headerName: "Buy Price",
+      field: "total",
+      headerName: "Total Cost/Earnings",
       flex: 0.5,
       type: "number",
-      headerAlign: "left",
-      align: "left",
-    },
-    {
-      field: "shares",
-      headerName: "Quantity",
-      flex: 0.5,
-      type: "number",
-      headerAlign: "left",
-      align: "left",
-    },
-    {
-      field: "type",
-      headerName: "Trade Type",
-      flex: 0.5,
-      headerAlign: "left",
-      align: "left",
-    },
-    {
-      field: "invAmount",
-      headerName: "Investment Amount",
-      flex: 0.5,
-      type: "number",
-      headerAlign: "left",
-      align: "left",
+      valueGetter: (params) =>
+        params.row.type === "BUY"
+          ? `$${params.row.totalCost.toFixed(2)}`
+          : `$${params.row.totalEarnings.toFixed(2)}`,
     },
     {
       field: "date",
-      headerName: "Transaction Date",
+      headerName: "Date",
       flex: 1,
-      cellClassName: "name-column--cell",
+      valueGetter: (params) =>
+        new Date(params.row.date.seconds * 1000).toLocaleString(),
     },
   ];
 
   return (
-    <>
-      <Box m="20px">
-        <Header title="Trade History" subtitle="Your Order History Details" />
-        <Box
-          m="40px 0 0 0"
-          height="75vh"
-          sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
-            "& .name-column--cell": {
-              color: colors.greenAccent[300],
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: colors.blueAccent[700],
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: colors.primary[400],
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "none",
-              backgroundColor: colors.blueAccent[700],
-            },
-            "& .MuiCheckbox-root": {
-              color: `${colors.greenAccent[200]} !important`,
-            },
-          }}
-        >
+    <Box m="20px">
+      <Header title="Orders" subtitle="Transaction History" />
+      <Box
+        m="40px 0 0 0"
+        height="75vh"
+        sx={{
+          "& .MuiDataGrid-root": { border: "none" },
+          "& .MuiDataGrid-cell": { borderBottom: "none" },
+          "& .MuiDataGrid-columnHeaders": { backgroundColor: "#1976d2", borderBottom: "none" },
+          "& .MuiDataGrid-virtualScroller": { backgroundColor: "#f4f4f4" },
+          "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: "#1976d2" },
+        }}
+      >
+        {loading ? (
+          <div>Loading orders...</div>
+        ) : rows.length > 0 ? (
           <DataGrid
-            rows={rows}
+            rows={rows.map((row, index) => ({ id: index, ...row }))}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
           />
-        </Box>
+        ) : (
+          <div>No orders found.</div>
+        )}
       </Box>
-    </>
+    </Box>
   );
 };
 
-export default Portfolio;
+export default TradeHistory;
