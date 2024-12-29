@@ -1,105 +1,122 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Box, CircularProgress, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from "@mui/material";
 import axios from "axios";
 import Header from "../../components/Headers";
 
 const TradeHistory = () => {
-  console.log("Rendering Orders component...");
-
-  const user = JSON.parse(localStorage.getItem("user")); // Fetch user from localStorage
-  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Fetch client from localStorage
+  const user = JSON.parse(localStorage.getItem("user")); // Get the logged-in user
+  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Get the selected client
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const userId = JSON.parse(localStorage.getItem('user'))?.id;
-  const clientId = JSON.parse(localStorage.getItem('selectedClient'))?.id;
-
-  // Fetch orders data
   const fetchOrders = async () => {
-    console.log("Inside fetchOrders...");
     if (!user || !selectedClient) {
-      console.error("User or client is missing.", { user, selectedClient });
-      setLoading(false);
+      console.error("User or selected client is missing.");
+      setError("User or selected client information is missing.");
       return;
     }
 
     try {
-      console.log(`Calling API for user: ${user.id}, client: ${selectedClient.id}`);
+      setLoading(true);
+      console.log("Fetching orders...");
       const response = await axios.get(
-        `https://act-production-5e24.up.railway.app/api/orders/${user.id}/${selectedClient.id}`
+        `https://act-production-5e24.up.railway.app/api/orders/${user.id}/${selectedClient}`
       );
+      console.log("Orders retrieved:", response.data);
 
-      console.log("API response received:", response.data);
-      setRows(response.data.orders || []);
+      if (response.data.orders && response.data.orders.length > 0) {
+        setRows(response.data.orders);
+      } else {
+        setRows([]);
+        console.warn("No orders found for the client.");
+      }
     } catch (error) {
-      console.error("Error fetching orders:", error);
-      setRows([]);
+      console.error("Error fetching orders:", error.message);
+      setError("Failed to fetch orders. Please try again later.");
     } finally {
-      console.log("Fetch orders completed.");
       setLoading(false);
     }
   };
 
-  // Fetch orders on component mount
   useEffect(() => {
-    console.log("useEffect triggered - Fetching orders...");
     fetchOrders();
   }, []);
 
-  // Define columns for DataGrid
-  const columns = [
-    { field: "type", headerName: "Type", flex: 1 },
-    { field: "symbol", headerName: "Symbol", flex: 1 },
-    { field: "name", headerName: "Stock Name", flex: 1 },
-    { field: "quantity", headerName: "Quantity", flex: 0.5, type: "number" },
-    { field: "price", headerName: "Price", flex: 0.5, type: "number" },
-    {
-      field: "total",
-      headerName: "Total Cost/Earnings",
-      flex: 0.5,
-      type: "number",
-      valueGetter: (params) =>
-        params.row.type === "BUY"
-          ? `$${params.row.totalCost.toFixed(2)}`
-          : `$${params.row.totalEarnings.toFixed(2)}`,
-    },
-    {
-      field: "date",
-      headerName: "Date",
-      flex: 1,
-      valueGetter: (params) =>
-        new Date(params.row.date.seconds * 1000).toLocaleString(),
-    },
-  ];
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
     <Box m="20px">
       <Header title="Orders" subtitle="Transaction History" />
-      <Box
-        m="40px 0 0 0"
-        height="75vh"
-        sx={{
-          "& .MuiDataGrid-root": { border: "none" },
-          "& .MuiDataGrid-cell": { borderBottom: "none" },
-          "& .MuiDataGrid-columnHeaders": { backgroundColor: "#1976d2", borderBottom: "none" },
-          "& .MuiDataGrid-virtualScroller": { backgroundColor: "#f4f4f4" },
-          "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: "#1976d2" },
-        }}
-      >
-        {loading ? (
-          <div>Loading orders...</div>
-        ) : rows.length > 0 ? (
-          <DataGrid
-            rows={rows.map((row, index) => ({ id: index, ...row }))}
-            columns={columns}
-            components={{ Toolbar: GridToolbar }}
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="300px">
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Typography color="error" variant="h6" align="center">
+          {error}
+        </Typography>
+      ) : rows.length === 0 ? (
+        <Typography variant="h6" align="center">
+          No orders found.
+        </Typography>
+      ) : (
+        <Paper>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Symbol</TableCell>
+                  <TableCell>Stock Name</TableCell>
+                  <TableCell>Quantity</TableCell>
+                  <TableCell>Price</TableCell>
+                  <TableCell>Total Cost/Earnings</TableCell>
+                  <TableCell>Date</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{row.type}</TableCell>
+                    <TableCell>{row.symbol}</TableCell>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.quantity}</TableCell>
+                    <TableCell>${row.price.toFixed(2)}</TableCell>
+                    <TableCell>
+                      {row.type === "BUY"
+                        ? `$${row.totalCost.toFixed(2)}`
+                        : `$${row.totalEarnings.toFixed(2)}`}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(row.date.seconds * 1000).toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        ) : (
-          <div>No orders found.</div>
-        )}
-      </Box>
+        </Paper>
+      )}
     </Box>
   );
 };
