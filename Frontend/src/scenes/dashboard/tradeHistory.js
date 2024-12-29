@@ -13,6 +13,9 @@ const TradeHistory = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const userId = JSON.parse(localStorage.getItem('user'))?.id;
+  const clientId = JSON.parse(localStorage.getItem('selectedClient'))?.id;
+
   // Fetch orders data
   const fetchOrders = async () => {
     console.log("Inside fetchOrders...");

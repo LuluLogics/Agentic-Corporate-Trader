@@ -146,7 +146,7 @@ function App() {
                 <HamburgerMenu />
                 <main className="context">
                   <Topbar />
-                  <TradeHistory userId={currentUserId} clientId={selectedClientId} />
+                  <TradeHistory />
                 </main>
               </div>
             }
