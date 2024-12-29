@@ -98,15 +98,30 @@ const Watchlist = () => {
     try {
       const payload = { stock_ticker: stockTicker };
       const response = await axios.post("https://act-ai-production.up.railway.app/analyze", payload);
-      setAIRecResponse(response.data?.recommendation || "No recommendation available.");
-      setReasoning(response.data?.reasoning || "No reasoning available.");
+  
+      let fetchedRecommendation = response.data?.recommendation || "No recommendation available.";
+      let fetchedReasoning = response.data?.reasoning || "No reasoning available.";
+  
+      // Check for inconsistencies and align the recommendation
+      if (fetchedReasoning.toLowerCase().includes("sell") && fetchedRecommendation.toLowerCase() !== "sell") {
+        fetchedRecommendation = "Sell";
+      } else if (fetchedReasoning.toLowerCase().includes("buy") && fetchedRecommendation.toLowerCase() !== "buy") {
+        fetchedRecommendation = "Buy";
+      } else if (fetchedReasoning.toLowerCase().includes("hold") && fetchedRecommendation.toLowerCase() !== "hold") {
+        fetchedRecommendation = "Hold";
+      }
+  
+      setAIRecResponse(fetchedRecommendation);
+      setReasoning(fetchedReasoning);
     } catch (error) {
       console.error("Error fetching AI recommendation:", error.response?.data || error.message);
       setAIRecResponse("Failed to fetch AI recommendation.");
+      setReasoning("No reasoning available.");
     } finally {
       setLoadingAIRec(false); // Stop loading
     }
   };
+  
   
 
   
