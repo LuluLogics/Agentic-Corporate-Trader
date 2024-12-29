@@ -1,155 +1,99 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import axios from "axios";
+import Header from "../../components/Headers";
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TablePagination from '@mui/material/TablePagination';
-import Title from './Title';
+const Orders = () => {
+  const user = JSON.parse(localStorage.getItem("user")); // Fetch user from localStorage
+  const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Fetch client from localStorage
 
-export default function Orders() {
   const [rows, setRows] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
 
-  // Debugging states
-  const [debugInfo, setDebugInfo] = useState({
-    userId: null,
-    clientId: null,
-    apiResponse: null,
-    error: null,
-  });
-
-  // Fetch userId and clientId from localStorage
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const client = JSON.parse(localStorage.getItem('selectedClient'));
-    if (!user || !user.id || !client || !client.id) {
-      console.error('Missing userId or clientId from localStorage');
-      setDebugInfo((prev) => ({
-        ...prev,
-        error: 'Missing userId or clientId from localStorage',
-      }));
-    } else {
-      setDebugInfo((prev) => ({
-        ...prev,
-        userId: user.id,
-        clientId: client.id,
-      }));
-    }
-  }, []);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  // Fetch orders from the API
+  // Fetch orders data
   const fetchOrders = async () => {
-    const { userId, clientId } = debugInfo;
-
-    if (!userId || !clientId) {
-      console.error('Missing userId or clientId; aborting fetchOrders');
+    if (!user || !selectedClient) {
+      console.error("User or client is missing.");
       setLoading(false);
       return;
     }
 
-    console.log('Calling API with:', { userId, clientId });
-
     try {
-      setLoading(true);
+      console.log("Fetching orders...");
       const response = await axios.get(
-        `https://act-production-5e24.up.railway.app/api/orders/${userId}/${clientId}`
+        `https://act-production-5e24.up.railway.app/api/orders/${user.id}/${selectedClient.id}`
       );
-      console.log('API Response:', response.data);
 
+      console.log("Orders fetched:", response.data);
       setRows(response.data.orders || []);
-      setDebugInfo((prev) => ({
-        ...prev,
-        apiResponse: response.data.orders,
-      }));
     } catch (error) {
-      console.error('Error fetching orders:', error);
-      setDebugInfo((prev) => ({
-        ...prev,
-        error: error.message,
-      }));
+      console.error("Error fetching orders:", error);
       setRows([]);
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetch orders on component mount
   useEffect(() => {
-    if (debugInfo.userId && debugInfo.clientId) {
-      fetchOrders();
-    }
-  }, [debugInfo.userId, debugInfo.clientId]);
+    fetchOrders();
+  }, []);
+
+  // Define columns for DataGrid
+  const columns = [
+    { field: "type", headerName: "Type", flex: 1 },
+    { field: "symbol", headerName: "Symbol", flex: 1 },
+    { field: "name", headerName: "Stock Name", flex: 1 },
+    { field: "quantity", headerName: "Quantity", flex: 0.5, type: "number" },
+    { field: "price", headerName: "Price", flex: 0.5, type: "number" },
+    {
+      field: "total",
+      headerName: "Total Cost/Earnings",
+      flex: 0.5,
+      type: "number",
+      valueGetter: (params) =>
+        params.row.type === "BUY"
+          ? `$${params.row.totalCost.toFixed(2)}`
+          : `$${params.row.totalEarnings.toFixed(2)}`,
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      flex: 1,
+      valueGetter: (params) =>
+        new Date(params.row.date.seconds * 1000).toLocaleString(),
+    },
+  ];
 
   return (
-    <React.Fragment>
-      <Title>Client Orders</Title>
-      <div>
-        <strong>Debug Info:</strong>
-        <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
-      </div>
-      {loading ? (
-        <p>Loading orders...</p>
-      ) : rows.length === 0 ? (
-        <p>No orders found for this client.</p>
-      ) : (
-        <>
-          <Table size="medium">
-            <TableHead>
-              <TableRow>
-                <TableCell>Type</TableCell>
-                <TableCell>Symbol</TableCell>
-                <TableCell>Stock Name</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Total Cost/Earnings</TableCell>
-                <TableCell>Date</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{row.symbol}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.quantity}</TableCell>
-                    <TableCell>${row.price.toFixed(2)}</TableCell>
-                    <TableCell>
-                      {row.type === 'BUY'
-                        ? `$${row.totalCost.toFixed(2)}`
-                        : `$${row.totalEarnings.toFixed(2)}`}
-                    </TableCell>
-                    <TableCell>{new Date(row.date.seconds * 1000).toLocaleString()}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+    <Box m="20px">
+      <Header title="Orders" subtitle="Transaction History" />
+      <Box
+        m="40px 0 0 0"
+        height="75vh"
+        sx={{
+          "& .MuiDataGrid-root": { border: "none" },
+          "& .MuiDataGrid-cell": { borderBottom: "none" },
+          "& .MuiDataGrid-columnHeaders": { backgroundColor: "#1976d2", borderBottom: "none" },
+          "& .MuiDataGrid-virtualScroller": { backgroundColor: "#f4f4f4" },
+          "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: "#1976d2" },
+        }}
+      >
+        {loading ? (
+          <div>Loading orders...</div>
+        ) : rows.length > 0 ? (
+          <DataGrid
+            rows={rows.map((row, index) => ({ id: index, ...row }))}
+            columns={columns}
+            components={{ Toolbar: GridToolbar }}
           />
-        </>
-      )}
-    </React.Fragment>
+        ) : (
+          <div>No orders found.</div>
+        )}
+      </Box>
+    </Box>
   );
-}
+};
+
+export default Orders;
