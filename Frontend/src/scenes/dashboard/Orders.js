@@ -5,6 +5,8 @@ import axios from "axios";
 import Header from "../../components/Headers";
 
 const Orders = () => {
+  console.log("Rendering Orders component...");
+
   const user = JSON.parse(localStorage.getItem("user")); // Fetch user from localStorage
   const selectedClient = JSON.parse(localStorage.getItem("selectedClient")); // Fetch client from localStorage
 
@@ -13,30 +15,33 @@ const Orders = () => {
 
   // Fetch orders data
   const fetchOrders = async () => {
+    console.log("Inside fetchOrders...");
     if (!user || !selectedClient) {
-      console.error("User or client is missing.");
+      console.error("User or client is missing.", { user, selectedClient });
       setLoading(false);
       return;
     }
 
     try {
-      console.log("Fetching orders...");
+      console.log(`Calling API for user: ${user.id}, client: ${selectedClient.id}`);
       const response = await axios.get(
         `https://act-production-5e24.up.railway.app/api/orders/${user.id}/${selectedClient.id}`
       );
 
-      console.log("Orders fetched:", response.data);
+      console.log("API response received:", response.data);
       setRows(response.data.orders || []);
     } catch (error) {
       console.error("Error fetching orders:", error);
       setRows([]);
     } finally {
+      console.log("Fetch orders completed.");
       setLoading(false);
     }
   };
 
   // Fetch orders on component mount
   useEffect(() => {
+    console.log("useEffect triggered - Fetching orders...");
     fetchOrders();
   }, []);
 
