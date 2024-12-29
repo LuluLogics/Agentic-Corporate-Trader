@@ -29,6 +29,7 @@ const Watchlist = () => {
   const [aiRecResponse, setAIRecResponse] = useState("");
   const [loadingAIRec, setLoadingAIRec] = useState(false); // Loading state for AI response
   const [aiRecStock, setAIRecStock] = useState(""); // To keep track of which stock is being queried
+  const [reasoning, setReasoning] = useState("");
 
 
 
@@ -90,21 +91,23 @@ const Watchlist = () => {
   const handleAIRecDialogOpen = async (stockTicker) => {
     setOpenAIRecDialog(true);
     setAIRecResponse(""); // Clear any previous response
+    setReasoning(""); // Clear previous reasoning
     setLoadingAIRec(true); // Show loading symbol
     setAIRecStock(stockTicker); // Set the stock being queried
-
+  
     try {
-        const payload = { stock_ticker: stockTicker };
-        console.log("Payload being sent:", payload); // Debug payload
-        const response = await axios.post("https://act-ai-production.up.railway.app/analyze", payload, {timeout: 120000});
-        setAIRecResponse(response.data?.recommendation || "No recommendation available.");
+      const payload = { stock_ticker: stockTicker };
+      const response = await axios.post("https://act-ai-production.up.railway.app/analyze", payload);
+      setAIRecResponse(response.data?.recommendation || "No recommendation available.");
+      setReasoning(response.data?.reasoning || "No reasoning available.");
     } catch (error) {
-        console.error("Error fetching AI recommendation:", error.response?.data || error.message);
-        setAIRecResponse("Failed to fetch AI recommendation.");
+      console.error("Error fetching AI recommendation:", error.response?.data || error.message);
+      setAIRecResponse("Failed to fetch AI recommendation.");
     } finally {
-        setLoadingAIRec(false); // Stop loading
+      setLoadingAIRec(false); // Stop loading
     }
-};
+  };
+  
 
   
   
@@ -473,10 +476,16 @@ const deletePriceAlert = async (alertId) => {
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Stock: {aiRecStock}
             </Typography>
-            <Typography variant="body1">{aiRecResponse}</Typography>
+            <Typography variant="body1" sx={{ marginBottom: "10px" }}>
+              Recommendation: {aiRecResponse}
+            </Typography>
+            <Typography variant="body2">
+              Reasoning: {reasoning || "No reasoning available."}
+            </Typography>
           </Box>
         )}
       </DialogContent>
+
 
       <DialogActions>
         <Button onClick={handleAIRecDialogClose} variant="contained" color="primary">
