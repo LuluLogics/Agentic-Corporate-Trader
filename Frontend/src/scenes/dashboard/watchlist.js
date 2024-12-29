@@ -8,7 +8,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import CircularProgress from "@mui/material";
+import { CircularProgress } from "@mui/material/CircularProgress";
 
 const Watchlist = () => {
   const storedData = JSON.parse(localStorage.getItem("user") || "{}");
