@@ -95,7 +95,7 @@ const Watchlist = () => {
   
     try {
       const response = await axios.post("https://act-ai-production.up.railway.app/analyze", {
-        stockTicker,
+        stock_ticker: stockTicker, // Correct the key to match the backend
       });
       setAIRecResponse(response.data?.recommendation || "No recommendation available.");
     } catch (error) {
@@ -105,6 +105,7 @@ const Watchlist = () => {
       setLoadingAIRec(false); // Stop loading
     }
   };
+  
   
   const handleAIRecDialogClose = () => {
     setOpenAIRecDialog(false);
