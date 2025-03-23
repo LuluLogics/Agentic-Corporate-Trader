@@ -1,5 +1,5 @@
 <!--
-  AGENTIC CORPORATE TRADER (ACT) SYSTEM
+  AGENTIC CORPORATE TRADER-(ACT)-SYSTEM
   -----------------------------------
   Note: GitHub’s markdown renderer doesn’t allow embedded custom fonts or CSS,
   so this layout uses standard Markdown formatting to achieve a polished look.
