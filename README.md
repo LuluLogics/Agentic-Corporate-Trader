@@ -47,32 +47,32 @@ Server Deployed on Heroku and Firebase deployed on Netlify
 
 ## Folder Structure
 
-### Backend Directory
-.
-├── app.js                  #  all modules imported in this file and mongoDB connection          
-├── server.js               #  Start point of the code
-├── api
-     ├──controllers         # controllers for each task and are called by routes
-     ├──models              # contains the schema of all collections in MongoDB
-     ├──routes              # contains the routes according to URL and request methods
-     └──services            # contains the business logic of all the operations
+ 	# Backend Directory
+    .
+    ├── app.js                  #  all modules imported in this file and mongoDB connection          
+    ├── server.js               #  Start point of the code
+    ├── api
+         ├──controllers         # controllers for each task and are called by routes
+         ├──models              # contains the schema of all collections in MongoDB
+         ├──routes              # contains the routes according to URL and request methods
+         └──services            # contains the business logic of all the operations
 
-### Frontend Directory
-frontend
-├── src
-|   |── Cards               # react components
-|   |── Charts              
-|   |── components          
-|   |── contexts  
-|   |── global              # contains react components on each page
-|   |── hooks               # hooks used for login and trade transaction
-|   └── scenes 
-|         |── dashboard     # contains react components of pages
-|         |── login          
-|         └── register
-└── app.js                  # contains the logic to fetch all items and call all the react components.
+    # Frontend Directory
 
----
+    frontend
+    ├── src
+    |   |── Cards               # react components
+    |   |── Charts              
+    |   |── components          
+    |   |── contexts  
+    |   |── global              # contains react components on each page
+    |   |── hooks               # hooks used for login and trade transaction
+    |   └── scenes 
+    |         |── dashboard     # contains react components of pages
+    |         |── login          
+    |         └── register
+    └── app.js                  # contains the logic to fetch all items and call all the react components.
+	
 
 ## Instructions to run the project:
 1. Open the project in visual studio code  
